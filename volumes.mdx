@@ -49,4 +49,21 @@ volume_handle.copy("training.csv", "archive/training.csv")
 
 The `volumes` argument to `client.run()` maps filesystem paths to volume handles. The function can access the volume’s contents at the specified path:
 
+```python
+def count_rows(client):
+    import csv
+
+    with open("/data/training.csv") as file:
+        return sum(1 for _ in csv.DictReader(file))
+
+
+run = client.run(
+    fn=count_rows,
+    image=image,
+    volumes={"/data": volume_handle},
+)
+
+print(run.wait())
+```
+
 ## Connecting an external object store
