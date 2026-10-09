@@ -47,7 +47,7 @@ volume_handle.copy("training.csv", "archive/training.csv")
 
 ## Mounting a volume
 
-The `volumes` argument to `client.run()` maps filesystem paths to volume handles. At runtime (and provided the caller has the necessary permissions), the volume’s contents will be mounted at the specified path:
+The `volumes` argument to `client.run()` maps filesystem paths to volume handles. At runtime, the volume’s contents are mounted at the specified path:
 
 ```python
 def count_rows(client):
@@ -66,7 +66,7 @@ result = client.run(
 print(result.wait())
 ```
 
-The same volume can be mounted by multiple calls, including calls created with `client.map()`. Volume mounts are _not_ inherited by child calls - each nested call must declare its own volume mounts.
+The same volume can be mounted by multiple calls, including calls created with `client.map()`. Volume mounts are _not_ inherited by child calls, so each child call must declare its own mounts.
 
 Mounting requires both read and write access to the volume. See [Policies](/policies) for more information on permissions in OuterProduct.
 
