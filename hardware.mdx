@@ -10,7 +10,7 @@ run = client.run(
     args=(training_data,),
     image=training_image,
     cpu=8,
-    memory_bytes=32 * 1024**3, # 32 GiB
+    memory_bytes=32 * 1024**3,
     gpu=1,
     gpu_type="A100-80GB",
 )
@@ -33,7 +33,7 @@ The default is one CPU. The requested CPUs are assigned to one worker; `cpu=4` d
 
 ## Memory
 
-Use `memory_bytes` to set the amount of RAM available to the container:
+Use `memory_bytes` to set the amount of RAM available to the worker:
 
 ```python
 run = client.run(
