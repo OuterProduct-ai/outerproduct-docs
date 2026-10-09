@@ -13,3 +13,22 @@ OuterProduct tracks execution at three levels:
 - **Attempt:** One try at executing a Call. When a Call is retried, it receives another Attempt within the same Run. See the section on [Retries and Durability](/retries-and-durability) for more discussion of OuterProduct's execution guarantees.
 
 A Run can contain many Calls, and each Call can have multiple Attempts. The OuterProduct dashboard shows this structure alongside execution status and logs.
+
+## Running a function
+
+The examples below use the `client` and `image` configured in the quickstart.
+
+```text
+def square(client, value):
+    return value * value
+
+
+run = client.run(
+    fn=square,
+    args=(7,),
+    image=image,
+)
+
+print(run.wait())
+# 49
+```
