@@ -16,12 +16,11 @@ A Run can contain many Calls, and each Call can have multiple Attempts. The Oute
 
 ## Running a function
 
-The examples below use the `client` and `image` configured in the quickstart.
+RunninThe examples below use the `client` and `image` configured in the quickstart.
 
 ```python
 def square(client, value):
     return value * value
-
 
 run = client.run(
     fn=square,
@@ -29,8 +28,7 @@ run = client.run(
     image=image,
 )
 
-print(run.wait())
-# 49
+print(run.wait()) # 49
 ```
 
 ### Arguments and results
