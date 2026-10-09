@@ -8,6 +8,19 @@ Volumes store datasets, model weights, and outputs that need to persist beyond a
 
 `client.create_volume()` creates a volume and returns a `VolumeHandle`. OuterProduct manages the underlying storage by default.
 
+```python
+import outerproduct_sdk as op
+
+client = op.init()
+volume = client.create_volume("datasets")
+```
+
+`client.get_volume()` returns a handle to an existing volume:
+
+```python
+volume = client.get_volume("datasets")
+```
+
 ## Reading and writing data
 
 ## Mounting a volume
