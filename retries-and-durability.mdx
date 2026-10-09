@@ -1,3 +1,130 @@
 ---
 title: "Retries & Durability"
 ---
+
+OuterProduct applications form a computation graph. Each function invocation is a **Call**, and a Call can create child Calls by using the scoped client it receives as its first argument.
+
+This hierarchy allows OuterProduct to track each piece of work independently:
+
+```text
+Run
+└── pipeline
+    ├── prepare_data
+    ├── train_model
+    └── evaluate_model
+```
+
+The top-level `client.run()` creates a new Run and its root Call. Inside that function, the scoped client creates child Calls within the same Run.
+
+```python
+import outerproduct_sdk as op
+
+
+image = op.Image.from_registry("python:3.12-slim")
+
+
+def prepare_data(_client, records):
+    return [record.strip() for record in records]
+
+
+def train_model(_client, records):
+    return {"examples": len(records)}
+
+
+def pipeline(client, records):
+    prepared = client.run(
+        fn=prepare_data,
+        args=(records,),
+        image=image,
+    ).wait()
+
+    return client.run(
+        fn=train_model,
+        args=(prepared,),
+        image=image,
+    ).wait()
+
+
+client = op.init()
+
+run = client.run(
+    fn=pipeline,
+    args=(["To be", "or not to be"],),
+    image=image,
+)
+
+model = run.wait()
+```
+
+Every function receives an OuterProduct client as its first argument. A function can ignore it, as `_client` does above, or use it to create more Calls.
+
+Breaking an application into Calls gives OuterProduct durable boundaries where work can be retried, tracked, and checkpointed.
+
+## Retrying a Call
+
+Use `RetryStrategy` to specify the maximum number of Attempts for a Call:
+
+```python
+run = client.run(
+    fn=train_model,
+    args=(training_data,),
+    image=training_image,
+    gpu_type="L4",
+    retry_strategy=op.RetryStrategy(max_attempts=3),
+)
+```
+
+`max_attempts` includes the first Attempt. In this example, OuterProduct can try the Call up to three times.
+
+If no retry strategy is provided, the Call receives one Attempt and is not retried automatically.
+
+Each Call defines its own retry strategy. A parent and its children can therefore use different limits:
+
+```python
+def pipeline(client, training_data):
+    return client.run(
+        fn=train_model,
+        args=(training_data,),
+        image=training_image,
+        gpu_type="L4",
+        retry_strategy=op.RetryStrategy(max_attempts=3),
+    ).wait()
+
+
+run = client.run(
+    fn=pipeline,
+    args=(training_data,),
+    image=workflow_image,
+    retry_strategy=op.RetryStrategy(max_attempts=2),
+)
+```
+
+Application failures and infrastructure failures both consume the Call’s Attempt budget. Cancellation is never retried.
+
+## Durable execution
+
+OuterProduct checkpoints work at Call boundaries. Once a Call succeeds, its result is stored as part of the Run.
+
+If a parent Call fails and is retried, it begins executing again. When it reaches a child Call that already succeeded, OuterProduct returns the stored result instead of executing that child again.
+
+For example:
+
+```text
+Attempt 1
+├── prepare_data   ✓ completed
+├── train_model    ✓ completed
+└── publish_model  ✗ failed
+
+Attempt 2
+├── prepare_data   ↪ reuse result
+├── train_model    ↪ reuse result
+└── publish_model  ✓ completed
+```
+
+This is why the computation graph matters: completed Calls become checkpoints. A long workflow can recover from a failure without repeating all of its successful work.
+
+Checkpointing applies to Calls, not to individual lines inside a function. If a Call fails halfway through its function, its next Attempt starts that function again from the beginning. Split expensive or important stages into separate Calls when you want them checkpointed independently.
+
+> [!WARNING] An Attempt may execute more than once, so external side effects—such as sending a message or writing to an external API—should be safe to repeat. A successful OuterProduct Call is reused during replay, but work performed inside a failed Attempt may run again.
+
+Checkpointed results are scoped to a single Run. Starting a new top-level Run executes the computation again.
