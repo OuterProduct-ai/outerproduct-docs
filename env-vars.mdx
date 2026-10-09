@@ -22,7 +22,7 @@ run = client.run(
 
 Environment variable values can also reference stored OuterProduct [Secrets](/secrets), allowing credentials to be supplied without including their values inline.
 
-This example requires a generic Secret named `huggingface-token` containing your Hugging Face token. The caller must have permission to access its value.
+This example requires a Secret named `huggingface-token` containing your Hugging Face token. The caller must have permission to access its value.
 
 ```python
 hf_token = client.get_secret("huggingface-token")
