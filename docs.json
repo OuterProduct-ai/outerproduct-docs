@@ -58,18 +58,8 @@
         "tab": "Documentation",
         "groups": [
           {
-            "group": "Getting Started",
-            "pages": [
-              "introduction",
-              "installation"
-            ],
-            "expanded": true
-          },
-          {
             "group": "Concepts",
             "pages": [
-              "guides/workspaces",
-              "guides/training",
               "guides/explanations"
             ],
             "icon": "book"
@@ -122,6 +112,12 @@
       {
         "tab": "API Reference",
         "openapi": "https://api.outerproduct.com/openapi.json"
+      },
+      {
+        "tab": "Templates",
+        "pages": [
+          "title"
+        ]
       }
     ]
   }
