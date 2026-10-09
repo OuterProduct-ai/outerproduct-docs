@@ -48,7 +48,7 @@ Memory is specified in bytes. The limit includes memory used by `/dev/shm`. If `
 
 ## GPUs
 
-Set `gpu_type` to request a particular GPU:
+Set `gpu_type` to request a particular GPU and `gpu` to specify the count. When `gpu_type` is provided and `gpu` is omitted, OuterProduct assigns one GPU by default.
 
 ```python
 run = client.run(
@@ -56,26 +56,13 @@ run = client.run(
     args=(training_data,),
     image=training_image,
     gpu_type="L4",
+    gpu=2,
 )
 ```
 
-When `gpu_type` is provided and `gpu` is omitted, OuterProduct assigns one GPU.
+`gpu=2` assigns two GPUs to the same worker and container. It does not start two workers or divide the function into two Calls. Your code must use a multi-GPU framework such as PyTorch Distributed to take advantage of both GPUs.
 
-Use `gpu` to request more than one GPU:
-
-```python
-run = client.run(
-    fn=train_model,
-    args=(training_data,),
-    image=training_image,
-    gpu_type="A100-80GB",
-    gpu=4,
-)
-```
-
-`gpu=4` assigns four GPUs to the same worker and container. It does not start four workers or divide the function into four Calls. Your code must use a multi-GPU framework such as PyTorch Distributed to take advantage of all four GPUs.
-
-To run independent work across multiple workers, create multiple Calls instead.
+To run independent work across multiple workers, create multiple Calls with one GPU instead.
 
 Your Image must also contain the drivers and libraries required by your application, such as a CUDA-enabled build of PyTorch.
 
