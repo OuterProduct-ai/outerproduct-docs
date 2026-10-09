@@ -57,13 +57,13 @@ def count_rows(client):
         return sum(1 for _ in csv.DictReader(file))
 
 
-run = client.run(
+result = client.run(
     fn=count_rows,
     image=image,
-    volumes={"/data": volume_handle},
+    volumes={"/data": volume_handle}, # count_rows can access
 )
 
-print(run.wait())
+print(result.wait())
 ```
 
 ## Connecting an external object store
