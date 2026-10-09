@@ -2,13 +2,11 @@
 title: "Environment Variables"
 ---
 
-The `env_vars` parameter sets environment variables for your function at runtime. These variables can configure application settings, service endpoints, and credentials. 
-
-OuterProduct applies these variables at runtime, so the same image can be reused across calls with different environment settings.
+The `env_vars` parameter can be used to set environment variables for your function at runtime. OuterProduct applies these variables at runtime, so the same image can be reused across calls with different environment settings. 
 
 ## Configuration
 
-`client.run()` accepts environment variables as a dictionary of names and string values:
+`client.run()` accepts environment variables as a dictionary of names and string values. Note that numeric values must be passed as strings
 
 ```python
 run = client.run(
