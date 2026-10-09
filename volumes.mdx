@@ -12,16 +12,18 @@ Volumes store datasets, model weights, and outputs that need to persist beyond a
 import outerproduct_sdk as op
 
 client = op.init()
-volume = client.create_volume("datasets")
+volume_handle = client.create_volume("datasets")
 ```
 
 `client.get_volume()` returns a handle to an existing volume:
 
 ```python
-volume = client.get_volume("datasets")
+volume_handle = client.get_volume("datasets")
 ```
 
 ## Reading and writing data
+
+`VolumeHandle` provides methods for reading and writing objects. Paths are relative to the volume’s root.
 
 ## Mounting a volume
 
