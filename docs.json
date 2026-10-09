@@ -26,9 +26,9 @@
   },
   "navbar": {},
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Getting started",
+        "group": "Getting started",
         "pages": [
           "untitled-page",
           "untitled-page-2",
@@ -36,7 +36,7 @@
         ]
       },
       {
-        "tab": "Execution",
+        "group": "Execution",
         "pages": [
           "images",
           "hardware",
@@ -47,7 +47,7 @@
         ]
       },
       {
-        "tab": "Governance",
+        "group": "Governance",
         "pages": [
           "secrets",
           "users-and-groups",
@@ -55,15 +55,16 @@
         ]
       },
       {
-        "tab": "SDK Reference",
-        "hidden": true
+        "group": "SDK Reference",
+        "hidden": true,
+        "pages": []
       },
       {
-        "tab": "API Reference",
-        "openapi": "https://api.outerproduct.com/openapi.json"
+        "group": "API Reference",
+        "pages": []
       },
       {
-        "tab": "Templates",
+        "group": "Templates",
         "pages": [
           "title",
           "mcp/prompts"
