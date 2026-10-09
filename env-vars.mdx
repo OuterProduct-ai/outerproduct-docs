@@ -6,7 +6,7 @@ Environment variables can be used to configure a function’s runtime environmen
 
 ## Configuration
 
-`client.run()` accepts environment variables as a dictionary of names and string values. Numeric values must also be passed as strings, such as `"32"` rather than `32`.
+`client.run()` accepts environment variables through `env_vars`, a dictionary of names and string values. Numeric values must also be passed as strings, such as `"32"` rather than `32`.
 
 ```python
 run = client.run(
@@ -19,7 +19,7 @@ run = client.run(
 )
 ```
 
-`client.map()` also accepts `env_vars`, and the same variables apply to every call it creates.
+`client.map()` also accepts `env_vars`the same variables apply to every call it creates.
 
 ## Using secrets
 
