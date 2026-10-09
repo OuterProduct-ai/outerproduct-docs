@@ -17,19 +17,30 @@ Read https://outerproduct.com/docs/guide/getting-started.md and walk me through 
     ```
   </Step>
   <Step title="Install the SDK">
+    <CodeGroup>
 
+    ```shellscript uv
+    uv add outerproduct-sdk
+    ```
+
+    ```shellscript pip
+    pip install outerproduct-sdk
+    ```
+
+    </CodeGroup>
   </Step>
-  <Step title="Initialize and open a workspace">
-    Call `op.init()` once to authenticate, then open a `Workspace`. The workspace is your entry point for unified data queries, model training, and reasoning.
+  <Step title="Create a client">
+    Import the SDK and initialize an authenticated client:
 
     ```python
-    import outerproduct as op
+    import outerproduct_sdk as op
     
-    op.init()  # reads OUTERPRODUCT_API_KEY from the environment to authenticate
-    ws = op.Workspace()
+    client = op.init()
     ```
+
+    `op.init()` reads your API key from the `OUTERPRODUCT_API_KEY` environment variable.
   </Step>
-  <Step>
+  <Step title="Run your first function">
   </Step>
 </Steps>
 

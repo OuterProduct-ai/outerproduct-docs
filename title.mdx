@@ -95,3 +95,43 @@ model = op.reasoning.fit(train, task=op.Binclass(label_column="approved")).wait(
 ```
 
 </CodeGroup>
+
+<Tabs>
+  <Tab title="Claude Desktop">
+    <Steps>
+      <Step>
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Tab 2">
+  </Tab>
+  <Tab title="Tab 3">
+  </Tab>
+</Tabs>
+
+## Complete example
+
+<CodeGroup>
+
+```python From a local CSV
+import outerproduct as op
+
+op.init()
+ws = op.Workspace()
+
+ws.register_csv("loans.csv", table_name="loans")
+train = ws.table("loans")
+
+model = op.reasoning.fit(train, task=op.Binclass(label_column="approved")).wait()
+```
+
+```text File 2
+```
+
+```text File 3
+```
+
+```text File 4
+```
+
+</CodeGroup>
