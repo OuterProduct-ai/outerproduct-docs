@@ -2,7 +2,7 @@
 title: "Overview"
 ---
 
-`client.run()` submits a Python function for asynchronous execution on OuterProduct. It packages the function and its arguments with the software dependencies, hardware, environment, and durability settings required to run it.
+`client.run()` submits a Python function for asynchronous execution on OuterProduct'. It packages the function and its arguments with the software dependencies, hardware, environment, and durability settings required to run it.
 
 Calling `client.run()` returns immediately with a handle to the Run. Call `.wait()` when you need its result.
 
@@ -18,7 +18,7 @@ def my_application(_client, input_path):
 client = op.init()
 
 run = client.run(
-    fn=process_data,
+    fn=my_application,
     args=("/data/input.json",),
     image=op.Image.from_registry("python:3.12-slim"),
     cpu=4,
