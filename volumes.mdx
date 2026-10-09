@@ -2,13 +2,11 @@
 title: "Volumes"
 ---
 
-Volumes store datasets, model weights, and outputs that need to persist beyond a single run. Their contents can be accessed directly through the SDK or mounted as files inside a function.
-
-Volumes provide access to object storage through OuterProduct. They can use OuterProduct-managed storage or connect to an existing bucket or container in your cloud account.
+Volumes store datasets, model weights, and outputs that need to persist beyond a single run. Their contents can be accessed directly through the SDK or mounted inside a function's runtime.
 
 ## Creating a volume
 
-`client.create_volume()` creates a volume and returns a `VolumeHandle`. OuterProduct manages the underlying storage by default.
+`client.create_volume()` creates a volume and returns a `VolumeHandle`. OuterProduct manages the underlying object storage by default.
 
 ```python
 import outerproduct_sdk as op
