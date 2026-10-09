@@ -37,6 +37,7 @@
       {
         "group": "Execution",
         "pages": [
+          "overview",
           "images",
           "hardware",
           "env-vars",
