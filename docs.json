@@ -58,13 +58,6 @@
         "tab": "Documentation",
         "groups": [
           {
-            "group": "Concepts",
-            "pages": [
-              "guides/explanations"
-            ],
-            "icon": "book"
-          },
-          {
             "group": "Data Connectors",
             "pages": [
               "guides/connectors/s3",
