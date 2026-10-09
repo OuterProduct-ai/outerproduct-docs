@@ -30,7 +30,7 @@ from pathlib import Path
 
 volume_handle.put("training.csv", Path("training.csv"))
 
-result = volume.get("training.csv")
+result = volume_handle.get("training.csv")
 Path("downloaded.csv").write_bytes(bytes(result.bytes()))
 ```
 
