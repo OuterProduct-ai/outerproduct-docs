@@ -10,6 +10,20 @@ OuterProduct is AI infrastructure built around **Liquid Execution**: you define 
 
 There is no more need to adapt your code to the underlying infrastructure. You can now run anything, anywhere, for as long as it takes. 
 
+```python
+run = client.run(
+    fn=train_shakespeare_model,
+    args=("tiny-shakespeare.txt",),
+    image=op.Image.from_registry(
+        "pytorch/pytorch:2.11.0-cuda12.8-cudnn9-runtime"
+    ),
+    gpu_type="H100",
+    retry_strategy=op.RetryStrategy(max_attempts=3),
+)
+
+model = run.wait()
+```
+
 ## How does it work?
 
 OuterProduct packages your Python code into containers, runs it on cloud infrastructure, and scales capacity with demand. You do not need to provision or manage servers. Dependencies, environments, and hardware requirements are defined directly in code.
