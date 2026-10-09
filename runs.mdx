@@ -32,3 +32,9 @@ run = client.run(
 print(run.wait())
 # 49
 ```
+
+### Arguments and results
+
+OuterProduct serializes functions, arguments, and return values using `cloudpickle`. Arguments and results can be Python objects, provided they support serialization.
+
+Large datasets, model weights, and other large inputs or outputs are often better stored in a Volume (/execution/volumes). Functions can then exchange paths to the data.
