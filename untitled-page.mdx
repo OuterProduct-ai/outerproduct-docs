@@ -2,11 +2,11 @@
 title: "Introduction"
 ---
 
-OuterProduct is an AI infrastructure platform powered by **Liquid Execution**. Liquid Execution lets you define what your application should do while OuterProduct manages where and how it runs. This form of execution is designed for workloads that are:
+OuterProduct is AI infrastructure built around **Liquid Execution**: you define what your application doesOuterProduct handles where and how it runs. Build workloads that go:
 
-- **Wide:** Parallelize across many compute resources.
-- **Deep:** Run durable, long-lived sequences of steps that can recover from failures.
-- **Heterogeneous:** Use different hardware and software environments within the same application.
+- **Wide:** Run work in parallel across many CPUs and GPUs.
+- **Deep:** Run long sequences of steps that recover from failures.
+- **Heterogeneous:** Mix hardware, dependencies, and runtime environments in one application.
 
 There is no more need to adapt your code to the underlying infrastructure. You can now run anything, anywhere, for as long as it takes. For now, this only works with arbitrary scripts in Python. 
 
@@ -14,7 +14,7 @@ There is no more need to adapt your code to the underlying infrastructure. You c
 
 OuterProduct turns your Python code into containerized workloads and runs them on cloud infrastructure. Capacity adjusts automatically as demand changes, so you do not need to provision or manage servers. Dependencies, runtime environments, and hardware requirements are all specified directly in code.
 
-When your application runs, it creates a computation graph of calls. OuterProduct tracks progress across this graph, retries failed work, and checkpoints completed work. If a failure occurs, execution can resume without repeating work that has already succeeded, making the application durable from end to end.
+When your application runs, it creates a computation graph of calls . OuterProduct tracks progress across this graph, retries failed work, and checkpoints completed work. If a failure occurs, execution can resume without repeating work that has already succeeded, making the application durable from end to end.
 
 ## What can you do with it?
 
