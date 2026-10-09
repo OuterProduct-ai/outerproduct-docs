@@ -1,8 +1,3 @@
----
-title: "DataFrame"
-icon: "database"
----
-
 An OuterProduct`DataFrame` is a query against the tables in your workspace (defined below).  Importantly, a `DataFrame` is a lazy-query, meaning that it will not materialize data until it is needed for computation.  As a result, you can query across data at any scale as if it were in memory.  
 
 The `DataFrame` is built in Rust on [Apache DataFusion](https://datafusion.apache.org/), so that queries run as real relational plans against all registered data sources simultaneously. These can be files on S3, Snowflake, Databricks, and your local machine.
