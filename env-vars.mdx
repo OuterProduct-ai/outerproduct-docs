@@ -10,4 +10,12 @@ OuterProduct applies these variables at runtime, so the same image can be reused
 
 `client.run()` accepts environment variables as a dictionary of names and string values:
 
+```python
+run = client.run(
+    fn=process_data,
+    image=image,
+    env_vars={"APP_LOG_LEVEL": "debug"},
+)
+```
+
 ## Using secrets
