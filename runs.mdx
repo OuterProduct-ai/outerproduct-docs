@@ -36,6 +36,7 @@ In addition to the function to run remotely, its args, and the Image required fo
 - the hardware requiremtns, such as cpu or gpu and gpu type
 - environment variables
 - volume mounts
+- retry settings for the root call
 
 `client.run()` returns a handle to that run's execution, whose result can be obtained using the `.wait()` method
 
@@ -49,7 +50,7 @@ OuterProduct serializes functions, arguments, and return values using `cloudpick
 
 ## Nested calls
 
-The client supplied to a running function connects it to the current Run. Calling its `run()` method creates a child Call within that Run.
+In the example above, we created a Run to execute a single function remotely using client.run(). This Run only consisted of a single Call. However, the client parameter supplied to a running function connects it to the current Run. Calling its `run()` method creates a child Call within that Run.
 
 ```python
 def sum_of_squares(client, left, right):
