@@ -35,7 +35,7 @@ result = run.wait()
 Each argument to `client.run()` controls one part of the execution:
 
 - **Function (**`fn`**):** The Python function to execute. It may be synchronous or asynchronous and must accept an OuterProduct client as its first argument.
-- **Arguments (**`args `**and** `kwargs`**):** The values passed to the function after its client argument. Arguments and results must be serializable.
+- **Arguments (**`args `**and** `kwargs`**):** The values passed to the function after its client argument. Arguments must be serializable.
 - **Image (**`image`**):** The container environment in which the function runs. The image defines the operating system, Python runtime, and installed dependencies.
 - **Hardware (**`cpu`**,** `memory_bytes`**,** `gpu`**, and** `gpu_type`**):** The compute resources assigned to the function. You can choose the number of CPUs, available memory, GPU count, and GPU type.
 - **Environment variables (**`env_vars`**):** Configuration injected into the container. Values can be plain strings or securely stored OuterProduct secrets.
