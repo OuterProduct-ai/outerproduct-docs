@@ -74,7 +74,7 @@ Mounting requires both read and write access to the volume.
 
 Mounted volumes support reading files and sequential writes to new files. They do not support in-place edits, appending, or atomic renames.
 
-## Existing object stores
+## Connecting an external object store
 
 Existing S3 buckets, Google Cloud Storage buckets, and Azure Blob Storage containers can be registered as OuterProduct Volumes. Registration connects a volume to the storage without copying its contents.
 
@@ -97,5 +97,3 @@ volume_handle = client.create_volume(
 With this prefix, `training.csv` in the volume corresponds to `s3://my-bucket/datasets/training.csv`. Without a prefix, paths are relative to the bucket’s root.
 
 Cloud credentials are stored as typed [Secrets](/governance/secrets), separately from the volume configuration.
-
-## Connecting an external object store
