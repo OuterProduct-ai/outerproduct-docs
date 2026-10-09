@@ -37,6 +37,8 @@ In addition to the function to run remotely, its args, and the Image required fo
 - environment variables
 - volume mounts
 
+`client.run()` returns a handle to that run's execution, whose result can be obtained using the `.wait()` method
+
 ### Arguments and results
 
 OuterProduct serializes functions, arguments, and return values using `cloudpickle`. Arguments and results can be Python objects, provided they support serialization.
