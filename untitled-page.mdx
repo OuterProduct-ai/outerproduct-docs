@@ -12,6 +12,10 @@ There is no more need to adapt your code to the underlying infrastructure. You c
 
 ## How does it work?
 
+OuterProduct packages your Python code into containers, runs it on cloud infrastructure, and scales capacity with demand. You define dependencies, environments, and hardware requirements directly in code—no servers to manage.
+
+As your application runs, OuterProduct tracks its graph of calls, checkpoints completed work, and retries failed steps. Execution picks up where it left off, without repeating successful work.
+
 OuterProduct turns your Python code into containerized workloads and runs them on cloud infrastructure. Capacity adjusts automatically as demand changes, so you do not need to provision or manage servers. Dependencies, runtime environments, and hardware requirements are all specified directly in code.
 
 When your application runs, it creates a computation graph of calls . OuterProduct tracks progress across this graph, retries failed work, and checkpoints completed work. If a failure occurs, execution can resume without repeating work that has already succeeded, making the application durable from end to end.
