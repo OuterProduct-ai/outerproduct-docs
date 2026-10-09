@@ -40,3 +40,91 @@ OuterProduct serializes functions, arguments, and return values using `cloudpick
 <Warning>
   Large arrays, datasets, model weights, and other large inputs or outputs are often better stored in a [Volume](/volumes) and managed through volume mounts.
 </Warning>
+
+## Nested calls
+
+The client supplied to a running function connects it to the current Run. Calling its `run()` method creates a child Call within that Run.
+
+```python
+def sum_of_squares(client, left, right):
+    first = client.run(
+        fn=square,
+        args=(left,),
+        image=image,
+    )
+    second = client.run(
+        fn=square,
+        args=(right,),
+        image=image,
+    )
+
+    return first.wait() + second.wait()
+
+
+run = client.run(
+    fn=sum_of_squares,
+    args=(3, 4),
+    image=image,
+)
+
+print(run.wait())
+# 25
+```
+
+This creates one Run with three Calls: the root Call to `sum_of_squares` and two child Calls to `square`.
+
+Both child Calls are submitted before the parent waits for their results, allowing them to execute concurrently. Inside the function, `client.run()` returns a `Call` handle, which provides the same `.wait()` interface.
+
+Each child Call specifies its own image and execution settings. Compute resources, environment variables, volume mounts, and retry settings are configured separately for each Call.
+
+Child Calls still running when their parent function returns are cancelled. In this example, the parent waits for both children before returning its result.
+
+## Mapping over inputs
+
+`client.map()` applies a function to a collection of inputs concurrently. It waits for all results and returns them in input order.
+
+```python
+def sum_of_squares(client, values):
+    results = client.map(
+        square,
+        values,
+        image=image,
+    )
+    return sum(results)
+
+
+run = client.run(
+    fn=sum_of_squares,
+    args=([1, 2, 3, 4],),
+    image=image,
+)
+
+print(run.wait())
+# 30
+```
+
+Each input becomes a separate argument to `square`. Here, the Run contains the root Call to `sum_of_squares` and four child Calls.
+
+As with `client.run()`, the execution context determines where the work belongs. Inside a running function, `client.map()` creates child Calls in the current Run. From local code, it creates a separate Run for each input.
+
+## Async usage
+
+The SDK’s execution methods also have asynchronous forms, available through `.aio()`. These integrate with Python’s `async` and `await`:
+
+```python
+import asyncio
+
+async def main():
+    run = await client.run.aio(
+        fn=square,
+        args=(7,),
+        image=image,
+    )
+    result = await run.wait.aio()
+    print(result)
+
+
+asyncio.run(main())
+```
+
+Functions executed by OuterProduct can also use `async def`. Within an async function, `await client.run.aio()`, `await call.wait.aio()`, and `await client.map.aio()` provide the same execution behavior without blocking the function’s event loop.
