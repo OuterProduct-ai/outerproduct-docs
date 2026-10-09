@@ -21,6 +21,8 @@ volume_handle = client.create_volume("datasets")
 volume_handle = client.get_volume("datasets")
 ```
 
+Both methods return an object of type `VolumeHandle`, with methods for reading and writing data.
+
 ## Reading and writing data
 
 `VolumeHandle` provides methods for reading and writing objects. Paths are relative to the volume’s root.
