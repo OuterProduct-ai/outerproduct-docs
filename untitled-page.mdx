@@ -2,3 +2,28 @@
 title: "Intro to OuterProduct"
 description: "XXX"
 ---
+
+OuterProduct is an AI infrastructure platform powered by **Liquid Execution**. Liquid Execution lets you define what your application should do while OuterProduct manages where and how it runs—including compute, data access, scheduling, retries, and recovery from failure.
+
+Modern AI applications rarely fit neatly on a single machine. They may require thousands of parallel tasks, long-running workflows, different combinations of CPUs and GPUs, access to governed data, and execution across public clouds, private clouds, or your own data center. Traditionally, developers must adapt their applications to each environment and manage this infrastructure themselves.
+
+Liquid Execution reverses that relationship: you define your computation in Python, and the infrastructure adapts to your application.
+
+## What makes execution “liquid”?
+
+Liquid Execution is designed for workloads that are:
+
+- **Wide:** Parallelize across many compute resources.
+- **Deep:** Run as durable, long-lived sequences of steps that can recover from failures.
+- **Heterogeneous:** Use different hardware and software environments within the same application.
+- **Shapeless:** Run across permitted resources wherever they live—including public, private, and hybrid clouds or your own data center.
+
+OuterProduct coordinates the compute, data, and execution required by these workloads. Your application can scale across available resources without embedding infrastructure-specific logic in its code.
+
+This makes it possible to build applications such as:
+
+- Multi-agent systems operating over large datasets, with automatic retries and fine-grained access to compute, data, and artifacts.
+- Model training and hyperparameter searches distributed across GPUs, with managed checkpoints and evaluation artifacts.
+- Long-running data and inference pipelines that resume after failures without repeating completed work.
+
+With OuterProduct, you can run anything, anywhere, for as long as it takes.
