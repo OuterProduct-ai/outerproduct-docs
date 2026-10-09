@@ -74,7 +74,7 @@ Mounted volumes support reading files and sequential writes to new files. They d
 
 ## Registering an external object store
 
-OuterProduct Volumes can also be created from existing S3 buckets, Google Cloud Storage buckets, and Azure Blob Storage containers. 
+OuterProduct Volumes can also be created from existing S3 buckets, Google Cloud Storage buckets, and Azure Blob Storage containers without copying their contents. 
 
 To connect to an external store, cloud credentials should first be stored as OuterProduct [Secrets](/secrets).
 
@@ -133,6 +133,6 @@ To connect to an external store, cloud credentials should first be stored as Out
     )
     ```
 
-    With this prefix, `training.csv` in the volume corresponds to the blob `datasets/training.csv` in `my-container`. If no prefix is specified, paths will be relative to the bucket’s root.
+    With this prefix, `training.csv` in the volume corresponds to the blob `datasets/training.csv` in `my-container`. If no prefix is specified, paths will be relative to the container’s root.
   </Tab>
 </Tabs>
