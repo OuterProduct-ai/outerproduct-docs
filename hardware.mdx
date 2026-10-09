@@ -1,3 +1,110 @@
 ---
 title: "Hardware"
 ---
+
+Each Call declares the hardware it needs through `client.run()`. Hardware is allocated per Call, so different parts of the same application can use different combinations of CPUs, memory, and GPUs.
+
+```python
+run = client.run(
+    fn=train_model,
+    args=(training_data,),
+    image=training_image,
+    cpu=8,
+    memory_bytes=32 * 1024**3,
+    gpu=1,
+    gpu_type="A100-80GB",
+)
+```
+
+## CPUs
+
+Use `cpu` to specify the number of CPUs assigned to the Call:
+
+```python
+run = client.run(
+    fn=process_data,
+    args=(dataset,),
+    image=image,
+    cpu=4,
+)
+```
+
+The default is one CPU. The requested CPUs are assigned to one worker; `cpu=4` does not create four workers or run the function four times.
+
+To distribute work across multiple workers, create multiple Calls—for example, with `client.map()`.
+
+## Memory
+
+Use `memory_bytes` to set the amount of RAM available to the container:
+
+```python
+run = client.run(
+    fn=process_data,
+    args=(dataset,),
+    image=image,
+    memory_bytes=16 * 1024**3,  # 16 GiB
+)
+```
+
+Memory is specified in bytes. The limit includes memory used by `/dev/shm`. If `memory_bytes` is omitted, OuterProduct uses the platform’s default allocation for the requested CPU count.
+
+## GPUs
+
+Set `gpu_type` to request a particular GPU:
+
+```python
+run = client.run(
+    fn=train_model,
+    args=(training_data,),
+    image=training_image,
+    gpu_type="L4",
+)
+```
+
+When `gpu_type` is provided and `gpu` is omitted, OuterProduct assigns one GPU.
+
+Use `gpu` to request more than one GPU:
+
+```python
+run = client.run(
+    fn=train_model,
+    args=(training_data,),
+    image=training_image,
+    gpu_type="A100-80GB",
+    gpu=4,
+)
+```
+
+`gpu=4` assigns four GPUs to the same worker and container. It does not start four workers or divide the function into four Calls. Your code must use a multi-GPU framework such as PyTorch Distributed to take advantage of all four GPUs.
+
+To run independent work across multiple workers, create multiple Calls instead.
+
+Your Image must also contain the drivers and libraries required by your application, such as a CUDA-enabled build of PyTorch.
+
+## Supported GPUs
+
+OuterProduct currently supports the following GPU types and counts:
+
+| `gpu_type` | Supported `gpu` counts |
+| :-- | --: |
+| `"T4"` | 1, 2, 4, 8 |
+| `"L4"` | 1, 2, 4, 8 |
+| `"L40S"` | 1, 2, 4, 8 |
+| `"A10G"` | 1, 2, 4 |
+| `"A100"` | 1, 2, 4, 8 |
+| `"A100-80GB"` | 1, 2, 4, 8 |
+| `"H100"` | 1 |
+
+GPU names are case-sensitive. Availability may vary with current platform capacity.
+
+You can inspect the GPU types available to your account directly from the SDK:
+
+```python
+gpu_types = [
+    pool.accelerator
+    for pool in client.list_node_pools()
+    if pool.accelerator and pool.ready
+]
+
+print(gpu_types)
+```
