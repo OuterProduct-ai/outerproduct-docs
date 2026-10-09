@@ -16,7 +16,7 @@ Read https://outerproduct.com/docs/guide/getting-started.md and walk me through 
     export OUTERPRODUCT_API_KEY="your-api-key"
     ```
   </Step>
-  <Step title="Install the SDK">
+  <Step title="Install the SDK from PyPI">
     <CodeGroup>
 
     ```shellscript uv
@@ -29,16 +29,14 @@ Read https://outerproduct.com/docs/guide/getting-started.md and walk me through 
 
     </CodeGroup>
   </Step>
-  <Step title="Create a client">
-    Import the SDK and initialize an authenticated client:
+  <Step title="Create an OuterProduct client">
+    Import the SDK and initialize an authenticated client. `op.init()` reads your API key from the `OUTERPRODUCT_API_KEY` environment variable.
 
     ```python
     import outerproduct_sdk as op
     
     client = op.init()
     ```
-
-    `op.init()` reads your API key from the `OUTERPRODUCT_API_KEY` environment variable.
   </Step>
   <Step title="Run your first function">
     Create a file named `quickstart.py`:
@@ -46,10 +44,8 @@ Read https://outerproduct.com/docs/guide/getting-started.md and walk me through 
     ```python
     import outerproduct_sdk as op
     
-    
     def add(_client, a, b):
         return a + b
-    
     
     client = op.init()
     
@@ -60,49 +56,24 @@ Read https://outerproduct.com/docs/guide/getting-started.md and walk me through 
     )
     
     print(run.wait())
-    
     ```
 
     Run it locally:
 
     ```shellscript
     python quickstart.py
-    
     ```
 
     OuterProduct executes `add` in the cloud and returns:
 
     ```shellscript
     42
-    
     ```
 
     You can also ask a coding agent to create an example for you:
 
-    > Write me a simple Python script that demonstrates the power of the OuterProduct platform.
+    ```text wrap
+    Write me a simple Python script that demonstrates the power of the OuterProduct platform.
+    ```
   </Step>
 </Steps>
-
-## Putting it all together
-
-```python
-import outerproduct as op
-
-op.init()  # reads OUTERPRODUCT_API_KEY from the environment
-ws = op.Workspace()
-
-# Register a CSV as a source table you can query.
-ws.register_csv("customers.csv", table_name="customers")
-
-# Build the training set as a query, then fit a ReasoningModel.
-train = ws.table("customers")
-model = op.reasoning.fit(train, task=op.Binclass(label_column="churn")).wait()
-
-# Score recent customers with a query; get predictions and reasoning.
-recent = ws.table("customers").filter(op.col("signup_year") == 2025)
-predictions = model.predict(recent)
-reasoning = model.explain(recent)
-
-print(reasoning.feature_names)
-print(reasoning.drivers.shape)
-```
