@@ -1,3 +1,97 @@
 ---
 title: "Images"
 ---
+
+Every OuterProduct Call runs inside a container. An `op.Image` describes that container’s operating system, Python runtime and dependencies, and local files.
+
+Images are lazy: OuterProduct prepares them when they are first used by a Call. They are also immutable—methods such as `with_uv_pip_install()` return a new Image instead of modifying the existing one.
+
+## Start from a container image
+
+Create an Image from any compatible container registry reference:
+
+```text
+import outerproduct_sdk as op
+
+image = op.Image.from_registry("python:3.12-slim")
+```
+
+You can also use an image from another registry:
+
+```text
+image = op.Image.from_registry(
+    "ghcr.io/my-organization/my-image:v1"
+)
+```
+
+The base image supplies the operating system and Python interpreter. Registry references should not include an `https://` prefix.
+
+## Install Python packages
+
+Use `with_uv_pip_install()` to add packages to the environment:
+
+```text
+image = (
+    op.Image
+    .from_registry("python:3.12-slim")
+    .with_uv_pip_install(
+        "numpy",
+        "pandas",
+    )
+)
+```
+
+For a GPU workload, you can begin with a CUDA-enabled PyTorch image and add the libraries your application needs:
+
+```text
+training_image = (
+    op.Image
+    .from_registry(
+        "pytorch/pytorch:2.11.0-cuda12.8-cudnn9-runtime"
+    )
+    .with_uv_pip_install(
+        "transformers",
+        "datasets",
+        "accelerate",
+    )
+)
+```
+
+For reproducible environments, pin package versions in production applications.
+
+## Add local files and directories
+
+An Image can include files from your local project. Use `add_local_file()` for an individual file and `add_local_dir()` for a directory:
+
+```text
+image = (
+    op.Image
+    .from_registry("python:3.12-slim")
+    .with_uv_pip_install("pandas")
+    .add_local_dir("./src", "/app/src")
+    .add_local_file("./config.json", "/app/config.json")
+)
+```
+
+The first argument is the local path. The second is the absolute path where the file or directory will appear inside the container.
+
+OuterProduct uploads local files when the Image is used. If you change them, the affected Image layers are rebuilt. When multiple additions write to the same path, the later addition takes precedence.
+
+Local files added to an Image are part of the execution environment. For data that must persist across Calls or Runs, use a Volume instead.
+
+## Run with an Image
+
+Pass the Image to `client.run()`:
+
+```text
+run = client.run(
+    fn=train_model,
+    args=(training_data,),
+    image=training_image,
+    gpu_type="L4",
+)
+
+model = run.wait()
+```
+
+Each Call can use a different Image, allowing one application to combine functions with different dependencies and runtime environments.
