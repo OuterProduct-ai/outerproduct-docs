@@ -29,9 +29,7 @@ run = client.run(
 )
 ```
 
-The default is one CPU. The requested CPUs are assigned to one worker; `cpu=4` does not create four workers or run the function four times.
-
-To distribute work across multiple workers, create multiple Calls—for example, with `client.map()`.
+The default is one CPU. The requested CPUs are assigned to one worker; `cpu=4` does not create four workers. To distribute work across multiple workers, create multiple Calls—for example, with `client.map()`.
 
 ## Memory
 
