@@ -95,6 +95,9 @@
       {
         "tab": "API Reference",
         "openapi": "https://api.outerproduct.com/openapi.json"
+      },
+      {
+        "tab": "Untitled Tab"
       }
     ]
   }
