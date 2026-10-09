@@ -36,6 +36,10 @@ The generated custom trust policy only sets up login. The generated permissions 
   The environment-variable approach is strongly recommended for production workloads. It keeps credentials out of source code and avoids accidental exposure in version-control history or notebook outputs.
 </Note>
 
+<Warning>
+  Calling any SDK function before `op.init()` raises an `AuthenticationError`. Make sure `init()` is always the first call in your program.
+</Warning>
+
 <Steps>
   <Step title="XXX">
     XXX
