@@ -82,7 +82,9 @@ Existing S3 buckets, Google Cloud Storage buckets, and Azure Blob Storage contai
 
 An S3 volume specifies a bucket and a stored AWS credential:
 
-```python
+<CodeGroup>
+
+```python Amazon S3
 credential = client.get_secret("aws-storage")
 
 volume_handle = client.create_volume(
@@ -95,6 +97,35 @@ volume_handle = client.create_volume(
     ),
 )
 ```
+
+```python Google Cloud Storage
+credential = client.get_secret("gcp-storage")
+
+external_volume = client.create_volume(
+    "external-datasets",
+    provider=op.VolumeProvider.Gcs(
+        bucket="my-bucket",
+        prefix="datasets/",
+        credential=credential.name,
+    ),
+)
+```
+
+```python Azure Blob Storage
+credential = client.get_secret("azure-storage")
+
+external_volume = client.create_volume(
+    "external-datasets",
+    provider=op.VolumeProvider.Azure(
+        account="mystorageaccount",
+        container="my-container",
+        prefix="datasets/",
+        credential=credential.name,
+    ),
+)
+```
+
+</CodeGroup>
 
 With this prefix, `training.csv` in the volume corresponds to `s3://my-bucket/datasets/training.csv`. Without a prefix, paths are relative to the bucket’s root.
 
