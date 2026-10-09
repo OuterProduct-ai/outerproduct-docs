@@ -47,7 +47,7 @@ volume_handle.copy("training.csv", "archive/training.csv")
 
 ## Mounting a volume
 
-The `volumes` argument to `client.run()` maps filesystem paths to volume handles. At runtime (and provided the caller is permitted to the function can access the volume’s contents at the specified path:
+The `volumes` argument to `client.run()` maps filesystem paths to volume handles. At runtime (and provided the caller has the necessary permissions), the function can access the volume’s contents at the specified path:
 
 ```python
 def count_rows(client):
