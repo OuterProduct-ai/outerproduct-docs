@@ -50,7 +50,7 @@ OuterProduct serializes functions, arguments, and return values using `cloudpick
 
 ## Nested calls
 
-In the example above, we created a Run to execute a single function remotely using client.run(). This Run only consisted of a single Call. However, the client parameter supplied to a running function connects it to the current Run. Calling its `run()` method creates a child Call within that Run.
+In the example above, we created a Run to execute a single function remotely using client.run(). This Run only consisted of a single Call. However, the client parameter supplied to a running function connects it to the current Run. Calling its `run()` method creates a child Call within that Run. This allows for nesting an arbitrary computational graph in
 
 ```python
 def sum_of_squares(client, left, right):
