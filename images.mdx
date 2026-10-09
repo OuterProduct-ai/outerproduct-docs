@@ -64,13 +64,13 @@ The first argument is the local path. The second is the absolute path where the 
 
 OuterProduct uploads local files when the Image is used. If you change them, the affected Image layers are rebuilt. When multiple additions write to the same path, the later addition takes precedence.
 
-Local files added to an Image are part of the execution environment. For data that must persist across Calls or Runs, use a Volume instead.
+Local files added to an Image are part of the execution environment. For data that must persist across Calls or Runs, use a mounted Volume instead.
 
 ## Run with an Image
 
 Pass the Image to `client.run()`:
 
-```text
+```python
 run = client.run(
     fn=train_model,
     args=(training_data,),
