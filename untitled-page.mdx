@@ -14,9 +14,7 @@ There is no more need to adapt your code to the underlying infrastructure. You c
 run = client.run(
     fn=train_shakespeare_model,
     args=("tiny-shakespeare.txt",),
-    image=op.Image.from_registry(
-        "pytorch/pytorch:2.11.0-cuda12.8-cudnn9-runtime"
-    ),
+    image=op.Image.from_registry("pytorch/pytorch:2.11.0-cuda12.8-cudnn9-runtime"),
     gpu_type="H100",
     retry_strategy=op.RetryStrategy(max_attempts=3),
 )
