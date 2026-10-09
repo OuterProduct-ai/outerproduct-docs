@@ -28,7 +28,31 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Getting started"
+        "tab": "Getting started",
+        "pages": [
+          "untitled-page",
+          "untitled-page-2",
+          "untitled-page-3"
+        ]
+      },
+      {
+        "tab": "Execution",
+        "pages": [
+          "images",
+          "hardware",
+          "env-vars",
+          "volumes",
+          "runs",
+          "retries-and-durability"
+        ]
+      },
+      {
+        "tab": "Governance",
+        "pages": [
+          "secrets",
+          "users-and-groups",
+          "policies"
+        ]
       },
       {
         "tab": "Documentation",
