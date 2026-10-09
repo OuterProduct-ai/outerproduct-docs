@@ -19,3 +19,21 @@ run = client.run(
 ```
 
 ## Using secrets
+
+Environment variable values can also reference stored OuterProduct [Secrets](/secrets), allowing credentials to be supplied without including their values in code.
+
+This example requires a generic Secret named `huggingface-token` containing your Hugging Face token. The caller must have permission to access its value.
+
+```python
+hf_token = client.get_secret("huggingface-token")
+
+run = client.run(
+    fn=download_model,
+    image=image,
+    env_vars={"HF_TOKEN": hf_token},
+)
+```
+
+OuterProduct resolves the Secret and supplies its value as `HF_TOKEN`. The Hugging Face Hub library reads this variable for [authentication](https://huggingface.co/docs/huggingface_hub/package_reference/environment_variables#hf_token).
+
+Secrets can be created in the OuterProduct dashboard or through the SDK. See [Secrets](/governance/secrets) for creation and access management.
