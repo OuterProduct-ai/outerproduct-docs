@@ -18,6 +18,8 @@ run = client.run(
 )
 ```
 
+`client.map()` also accepts `env_vars`, and the same variables apply to every call it creates.
+
 ## Using secrets
 
 Environment variable values can also reference stored OuterProduct [Secrets](/secrets), allowing credentials to be supplied without including their values inline.
@@ -34,6 +36,6 @@ run = client.run(
 )
 ```
 
-OuterProduct resolves the Secret and supplies its value as `HF_TOKEN`. 
+OuterProduct resolves the Secret and supplies its value to the runtime environment as `HF_TOKEN`. 
 
 Secrets can be created in the OuterProduct dashboard or through the SDK. See [Secrets](/governance/secrets) for creation and access management.
