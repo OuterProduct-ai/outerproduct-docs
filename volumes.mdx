@@ -50,20 +50,6 @@ volume_handle.copy("training.csv", "archive/training.csv")
 The `volumes` argument to `client.run()` maps filesystem paths to volume handles. At runtime (and provided the caller has the necessary permissions), the volume’s contents will be mounted at the specified path:
 
 ```python
-def count_rows(client):
-    import csv
-
-    with open("/data/training.csv") as file:
-        return sum(1 for _ in csv.DictReader(file))
-
-
-result = client.run(
-    fn=count_rows,
-    image=image,
-    volumes={"/data": volume_handle}, # count_rows can access
-)
-
-print(result.wait())
 ```
 
 The same volume can be mounted by multiple calls, including calls created with `client.map()`. Nested calls must declare their own volume mounts.
