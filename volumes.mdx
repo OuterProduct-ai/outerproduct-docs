@@ -114,7 +114,7 @@ To connect to an external store, cloud credentials should first be stored as Out
     )
     ```
 
-    With this prefix, `training.csv` in the volume corresponds to `gs://my-bucket/datasets/training.csv`. Without a prefix, paths are relative to the bucket’s root.
+    With this prefix, `training.csv` in the volume corresponds to `gs://my-bucket/datasets/training.csv`. If no prefix is specified, paths will be relative to the bucket’s root.
   </Tab>
   <Tab title="Azure Blob Storage">
     An Azure Blob Storage volume specifies a storage account, a container, and a stored Azure credential:
@@ -133,6 +133,6 @@ To connect to an external store, cloud credentials should first be stored as Out
     )
     ```
 
-    With this prefix, `training.csv` in the volume corresponds to the blob `datasets/training.csv` in `my-container`. Without a prefix, paths are relative to the container’s root.
+    With this prefix, `training.csv` in the volume corresponds to the blob `datasets/training.csv` in `my-container`. If no prefix is specified, paths will be relative to the bucket’s root.
   </Tab>
 </Tabs>
