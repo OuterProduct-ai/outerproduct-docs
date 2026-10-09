@@ -55,27 +55,6 @@
         ]
       },
       {
-        "tab": "Documentation",
-        "groups": [
-          {
-            "group": "Data Connectors",
-            "pages": [
-              "guides/connectors/s3",
-              "guides/connectors/databricks",
-              "guides/connectors/snowflake"
-            ]
-          },
-          {
-            "group": "MCP Server",
-            "pages": [
-              "mcp/overview",
-              "mcp/prompts"
-            ],
-            "hidden": true
-          }
-        ]
-      },
-      {
         "tab": "SDK Reference",
         "groups": [
           {
@@ -109,6 +88,7 @@
       {
         "tab": "Templates",
         "pages": [
+          "mcp/prompts",
           "title"
         ]
       }
