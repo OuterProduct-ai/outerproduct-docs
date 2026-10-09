@@ -34,6 +34,10 @@ result = volume_handle.get("training.csv")
 Path("downloaded.csv").write_bytes(bytes(result.bytes()))
 ```
 
+`put()` accepts bytes, local files, and streams. `get()` returns a result whose contents can be read into memory with `.bytes()` or consumed as a stream.
+
+The handle also supports listing objects, inspecting metadata, copying, renaming, and deleting data:
+
 ## Mounting a volume
 
 ## Connecting an external object store
