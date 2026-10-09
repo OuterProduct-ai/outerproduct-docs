@@ -4,7 +4,7 @@ title: "Images"
 
 Every OuterProduct Call runs inside a container. An `op.Image` describes that container’s operating system, Python runtime and dependencies, and local files.
 
-Images are lazy: OuterProduct prepares them when they are first used by a Call. They are also immutable—methods such as `with_uv_pip_install()` return a new Image instead of modifying the existing one.
+Images are lazy: OuterProduct prepares them when they are first used by a Call. They are also immutable: methods such as `with_uv_pip_install()` return a new Image instead of modifying the existing one.
 
 ## Start from a container image
 
