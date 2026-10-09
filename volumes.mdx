@@ -25,7 +25,16 @@ Both methods return an object of type `VolumeHandle`, with methods for reading a
 
 ## Reading and writing data
 
-`VolumeHandle` provides methods for reading and writing objects. Paths are relative to the volume’s root.
+`VolumeHandle` provides methods for reading and writing objects through [obstore](https://developmentseed.org/obstore/latest/api/get/). Paths are relative to the volume’s root.
+
+```python
+from pathlib import Path
+
+volume_handle.put("training.csv", Path("training.csv"))
+
+result = volume.get("training.csv")
+Path("downloaded.csv").write_bytes(bytes(result.bytes()))
+```
 
 ## Mounting a volume
 
