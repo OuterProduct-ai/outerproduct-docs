@@ -5,3 +5,11 @@ title: "Runs"
 A Run is an execution of your code on OuterProduct. It starts with a single function call and can include additional functions launched from within it, each with its own imgae, compute resources, and configuration.
 
 ## Runs, Calls, and Attempts
+
+OuterProduct tracks execution at three levels:
+
+- **Run:** The complete execution, including the initial function submited with `client.run()` and any work it launches.
+- **Call:** One function invocation submitted through the SDK, with its arguments and execution settings. Every Run starts with a root Call.
+- **Attempt:** One try at executing a Call. When a Call is retried, it receives another Attempt within the same Run.
+
+A Run can contain many Calls, and each Call can have multiple Attempts. The OuterProduct dashboard shows this structure alongside execution status and logs.
