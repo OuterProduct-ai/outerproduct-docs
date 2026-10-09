@@ -2,17 +2,20 @@
 title: "Environment Variables"
 ---
 
-The `env_vars` parameter sets environment variables for your function. OuterProduct applies these variables at runtime, so you can reuse the same image across calls with different environment settings. 
+The `env_vars` parameter sets environment variables for your function. These variables are applied when your function runs, so changing their values does not require rebuilding the image. 
 
 ## Configuration
 
-`client.run()` accepts environment variables as a dictionary of names and string values. Note that numeric values must be passed as strings
+`client.run()` accepts environment variables as a dictionary of names and string values. Numeric values must also be passed as strings, such as `"32"` rather than `32`.
 
 ```python
 run = client.run(
     fn=process_data,
     image=image,
-    env_vars={"APP_LOG_LEVEL": "debug"},
+    env_vars={
+        "APP_LOG_LEVEL": "debug",
+        "BATCH_SIZE": "32",
+    },
 )
 ```
 
