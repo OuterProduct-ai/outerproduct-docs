@@ -9,7 +9,7 @@ Every OuterProduct Call runs inside a container. An `op.Image` describes that co
 
 ## Start from a container image
 
-Create an Image from any compatible container registry reference:
+Create an Image from any compatible container registry reference. The base image supplies the operating system and Python interpreter.
 
 ```python
 import outerproduct_sdk as op
@@ -25,7 +25,9 @@ image = op.Image.from_registry(
 )
 ```
 
-The base image supplies the operating system and Python interpreter. Registry references should not include an `https://` prefix.
+<Warning>
+  Registry references should not include an `https://` prefix.
+</Warning>
 
 ## Install Python packages
 
