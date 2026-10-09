@@ -82,3 +82,17 @@ model = run.wait()
 ```
 
 Each Call can use a different Image, allowing one application to combine functions with different dependencies and runtime environments.
+
+<Warning>
+  **Match your Python versions**
+
+  OuterProduct serializes your function and arguments using your local Python interpreter, then deserializes them inside the container. Your local Python version should match the Python version in the Image.
+
+  For example, if you submit a function with Python 3.12, use an Image that also contains Python 3.12:
+
+  ```python
+  image = op.Image.from_registry("python:3.12-slim")
+  ```
+
+  A version mismatch can cause deserialization errors before your function begins executing.
+</Warning>
