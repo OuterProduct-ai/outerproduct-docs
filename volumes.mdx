@@ -96,7 +96,7 @@ Cloud credentials should first be stored as [Secrets](/secrets), separately from
     )
     ```
 
-    With this prefix, `training.csv` in the volume corresponds to `s3://my-bucket/datasets/training.csv`. Without a prefix, paths are relative to the bucket’s root.
+    With this prefix, `training.csv` in the volume corresponds to `s3://my-bucket/datasets/training.csv`. If no prefix is specified, paths will be relative to the bucket’s root.
   </Tab>
   <Tab title="Google Cloud Storage">
     A Google Cloud Storage volume specifies a bucket and a stored GCP credential:
