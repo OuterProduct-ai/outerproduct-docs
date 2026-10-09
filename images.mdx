@@ -46,7 +46,7 @@ image = (
 
 For a GPU workload, you can begin with a CUDA-enabled PyTorch image and add the libraries your application needs:
 
-```text
+```python
 training_image = (
     op.Image
     .from_registry(
@@ -54,13 +54,9 @@ training_image = (
     )
     .with_uv_pip_install(
         "transformers",
-        "datasets",
-        "accelerate",
     )
 )
 ```
-
-For reproducible environments, pin package versions in production applications.
 
 ## Add local files and directories
 
