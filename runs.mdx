@@ -38,5 +38,5 @@ print(run.wait())
 OuterProduct serializes functions, arguments, and return values using `cloudpickle`. Arguments and results can be Python objects, provided they support serialization.
 
 <Warning>
-  Large arrays, datasets, model weights, and other large inputs or outputs are often better stored in a [Volume](/volumes). Functions can then exchange paths to the data.
+  Large arrays, datasets, model weights, and other large inputs or outputs are often better stored in a [Volume](/volumes) and managed through volume mounts.
 </Warning>
