@@ -21,16 +21,16 @@ See [Retries and durability](/retries-and-durability) for retry configuration an
 To create a Run in OuterProduct, create a Python function that takes an OuterProduct  `client`  as its first parameter. Then, submit your function using `client.run()`, specifying the function to run and its arguments and compute requirements. 
 
 ```python
-def square(client, value):
-    return value * value
+def sum_batch(client, values):
+    return sum(values)
 
 run = client.run(
-    fn=square,
-    args=(7,),
+    fn=sum_batch,
+    args=([1, 2, 3],),
     image=image,
 )
 
-print(run.wait()) # 49
+print(run.wait())  # 6
 ```
 
 In addition to taking as input the function to run remotely, the function's arguments, and the Image required for execution, `client.run()` also accepts 
