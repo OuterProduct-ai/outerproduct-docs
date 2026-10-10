@@ -6,7 +6,7 @@ A Run is a remote execution of your code on OuterProduct. It starts with a singl
 
 ## Runs, Calls, and Attempts
 
-OuterProduct tracks execution at three levels: 
+OuterProduct tracks execution at three levels:
 
 - **Run:** The complete execution, including the initial function call and any calls it launches.
 - **Call:** One function invocation with its arguments and execution settings. Every Run starts with a root Call.
@@ -51,13 +51,13 @@ In addition to the function, arguments, and image, `client.run()` accepts variou
 
 OuterProduct serializes functions, arguments, and return values using `cloudpickle`. Arguments and results can be any Python objects that support this serialization.
 
-<Warning>
+<Note>
   Large arrays, datasets, model weights, and other large inputs or outputs are often better stored in a [Volume](/volumes) and managed through volume mounts.
-</Warning>
+</Note>
 
 ## Nested calls
 
-In the example above, we created a Run to execute a single function remotely using client.run(). This Run only consisted of a single function Call. More complex Runs often involve several nested Calls, each with possibly distinct computational requirements. 
+In the example above, we created a Run to execute a single function remotely using client.run(). This Run only consisted of a single function Call. More complex Runs often involve several nested Calls, each with possibly distinct computational requirements.
 
 To create a nested call, simply call `client.run()` inside a function that is part of a Run. When invoked inside a function, `client.run()` creates a child Call in the current Run and returns a `Call` handle. The parent can submit multiple child Calls before waiting for their results, allowing the children to execute concurrently.
 
