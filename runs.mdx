@@ -59,7 +59,7 @@ OuterProduct serializes functions, arguments, and return values using `cloudpick
 
 In the example above, we created a Run to execute a single function remotely using client.run(). This Run only consisted of a single function Call. More complex Runs often involve several nested Calls, each with possibly distinct computational requirements. 
 
-To create a nested call, simply call `client.run()` Inside a running function that is part of a Run. When invoked inside a function, `client.run()` creates a child Call in the current Run and returns a `Call` handle. The parent can submit multiple child Calls before waiting for their results, allowing the children to execute concurrently.
+To create a nested call, simply call `client.run()` inside a function that is part of a Run. When invoked inside a function, `client.run()` creates a child Call in the current Run and returns a `Call` handle. The parent can submit multiple child Calls before waiting for their results, allowing the children to execute concurrently.
 
 For example, a parent function can sum two batches independently and combine their results:
 
@@ -90,7 +90,7 @@ print(run.wait())  # 21
 
 This creates one Run with three Calls: the root Call to `sum_batches` and two child Calls to `sum_batch`. Both children are submitted before the parent calls `.wait()`.
 
-Each child Call specifies its own image and execution settings. Compute resources, environment variables, volume mounts, and retry settings are configured separately for each Call. Child Calls can also launch further child Calls within the same Run.
+Each child Call is configured separately, with its own image, compute resources, environment variables, volume mounts, and retry settings.
 
 When the parent function exits, OuterProduct cancels any unfinished child Calls. In this example, the parent waits for both children before returning its result.
 
