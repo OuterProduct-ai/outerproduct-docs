@@ -57,20 +57,22 @@ OuterProduct serializes functions, arguments, and return values using `cloudpick
 
 ## Nested calls
 
-In the example above, we created a Run to execute a single function remotely using client.run(). This Run only consisted of a single function Call. 
+In the example above, we created a Run to execute a single function remotely using client.run(). This Run only consisted of a single function Call. More complex Runs often involve several nested Calls, each with possibly distinct computational requirements. 
 
-However, the true power emerges when we nest XYZ.. The  client parameter supplied to a running function connects it to the current Run. Calling its `run()` method creates a child Call within that Run. This allows for nesting an arbitrarily deep computational graph of function calls within a single Run.
+To create a nested call, simply call `client.run()` Inside a running function that is part of a Run. When invoked inside a function, `client.run()` creates a child Call in the current Run and returns a `Call` handle. The parent can submit multiple child Calls before waiting for their results, allowing the children to execute concurrently.
+
+For example, a parent function can sum two batches independently and combine their results:
 
 ```python
-def sum_of_squares(client, left, right):
+def sum_batches(client, first_batch, second_batch):
     first = client.run(
-        fn=square,
-        args=(left,),
+        fn=sum_batch,
+        args=(first_batch,),
         image=image,
     )
     second = client.run(
-        fn=square,
-        args=(right,),
+        fn=sum_batch,
+        args=(second_batch,),
         image=image,
     )
 
@@ -78,69 +80,69 @@ def sum_of_squares(client, left, right):
 
 
 run = client.run(
-    fn=sum_of_squares,
-    args=(3, 4),
+    fn=sum_batches,
+    args=([1, 2, 3], [4, 5, 6]),
     image=image,
 )
 
-print(run.wait())
-# 25
+print(run.wait())  # 21
 ```
 
-This creates one Run with three Calls: the root Call to `sum_of_squares` and two child Calls to `square`.
+This creates one Run with three Calls: the root Call to `sum_batches` and two child Calls to `sum_batch`. Both children are submitted before the parent calls `.wait()`.
 
-Both child Calls are submitted before the parent waits for their results, allowing them to execute concurrently. Inside the function, `client.run()` returns a `Call` handle, which provides the same `.wait()` interface.
+Each child Call specifies its own image and execution settings. Compute resources, environment variables, volume mounts, and retry settings are configured separately for each Call. Child Calls can also launch further child Calls within the same Run.
 
-Each child Call specifies its own image and execution settings. Compute resources, environment variables, volume mounts, and retry settings are configured separately for each Call.
-
-Child Calls still running when their parent function returns are cancelled. In this example, the parent waits for both children before returning its result.
+Child Calls still running when their parent function returns are cancelled. In this example, the parent waits for both children before returning.
 
 ## Mapping over inputs
 
-`client.map()` applies a function to a collection of inputs concurrently. It waits for all results and returns them in input order.
+`client.map()` applies a function to a collection of inputs concurrently and returns the results in input order. It can replace repeated `client.run()` calls when each input needs the same processing.
 
 ```python
-def sum_of_squares(client, values):
+def sum_batches(client, batches):
     results = client.map(
-        square,
-        values,
+        sum_batch,
+        batches,
         image=image,
     )
+    # results contains [6, 15, 24] for the batches below.
     return sum(results)
 
 
 run = client.run(
-    fn=sum_of_squares,
-    args=([1, 2, 3, 4],),
+    fn=sum_batches,
+    args=([[1, 2, 3], [4, 5, 6], [7, 8, 9]],),
     image=image,
 )
 
-print(run.wait())
-# 30
+print(run.wait())  # 45
 ```
 
-Each input becomes a separate argument to `square`. Here, the Run contains the root Call to `sum_of_squares` and four child Calls.
+Each batch produces one Call to `sum_batch`, with the batch passed as its `values` argument. Here, the Run contains one root Call and three child Calls. The parent combines their results after `client.map()` completes.
 
-As with `client.run()`, the execution context determines where the work belongs. Inside a running function, `client.map()` creates child Calls in the current Run. From local code, it creates a separate Run for each input.
+Inside a running function, `client.map()` creates child Calls in the current Run. From local code, it creates a separate Run for each input.
 
 ## Async usage
 
-The SDK’s execution methods also have asynchronous forms, available through `.aio()`. These integrate with Python’s `async` and `await`:
+The `.aio()` interface allows SDK operations to be awaited without blocking the calling event loop.
 
 ```python
 import asyncio
 
+
 async def main():
     run = await client.run.aio(
-        fn=square,
-        args=(7,),
+        fn=sum_batch,
+        args=([1, 2, 3],),
         image=image,
     )
     result = await run.wait.aio()
-    print(result)
+    print(result)  # 6
 
 
 asyncio.run(main())
 ```
 
-Functions executed by OuterProduct can also use `async def`. Within an async function, `await client.run.aio()`, `await call.wait.aio()`, and `await client.map.aio()` provide the same execution behavior without blocking the function’s event loop.
+`await client.run.aio()` returns a handle after submission. `await run.wait.aio()` waits for the result.
+
+Functions executed by OuterProduct can also use `async def`. Inside an async function, `client.run.aio()`, `call.wait.aio()`, and `client.map.aio()` provide awaitable versions of the same operations. The relationship between Runs and Calls remains the same: calls submitted through the function’s supplied client belong to the current Run.
