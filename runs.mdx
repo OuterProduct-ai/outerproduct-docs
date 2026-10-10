@@ -21,9 +21,12 @@ See [Retries and durability](/retries-and-durability) for retry configuration an
 To create a Run in OuterProduct, create a Python function that takes an OuterProduct  `client`  as its first parameter. Then, submit your function using `client.run()`, specifying the function to run and its arguments and compute requirements. 
 
 ```python
+import outerproduct_sdk as op
+
 def sum_batch(client, values):
     return sum(values)
 
+client = op.init()
 run = client.run(
     fn=sum_batch,
     args=([1, 2, 3],),
