@@ -9,8 +9,8 @@ A Run is a remote execution of your code on OuterProduct. It starts with a singl
 OuterProduct tracks execution at three levels: 
 
 - **Run:** The complete execution, including the initial function call and any calls it launches.
-  - **Call:** One function invocation with its arguments and execution settings. Every Run starts with a root Call.
-  - **Attempt:** One try at executing a Call. Retrying a Call creates another Attempt for that Call within the same Run.
+- **Call:** One function invocation with its arguments and execution settings. Every Run starts with a root Call.
+- **Attempt:** One try at executing a Call. Retrying a Call creates another Attempt for that Call within the same Run.
 
 A Run can contain many Calls, and each Call can have multiple Attempts. The dashboard shows this structure alongside execution status and logs.
 
