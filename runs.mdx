@@ -16,7 +16,7 @@ A Run can contain many Calls, and each Call can have multiple Attempts. The Oute
 
 ## Running a function
 
-To create a Run in OuterProduct, create a Python function that takes an OuterProduct  `client`  as its first parameter. Then, submit your function using `client.run()`, specifying 
+To create a Run in OuterProduct, create a Python function that takes an OuterProduct  `client`  as its first parameter. Then, submit your function using `client.run()`, specifying the function to run and its arguments and compute requirements. 
 
 ```python
 def square(client, value):
@@ -31,7 +31,7 @@ run = client.run(
 print(run.wait()) # 49
 ```
 
-In addition to the function to run remotely, its args, and the Image required for its execution, client.run() also accepts 
+In addition to taking as input the function to run remotely, the function's arguments, and the Image required for execution, `client.run()` also accepts 
 
 - the hardware requiremtns, such as cpu or gpu and gpu type
 - environment variables
