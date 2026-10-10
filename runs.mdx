@@ -27,6 +27,9 @@ def sum_batch(client, values):
     return sum(values)
 
 client = op.init()
+
+image = op.Image.from_registry("python:3.13-slim")
+
 run = client.run(
     fn=sum_batch,
     args=([1, 2, 3],),
