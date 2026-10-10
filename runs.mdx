@@ -145,4 +145,4 @@ asyncio.run(main())
 
 `await client.run.aio()` returns a handle after submission. `await run.wait.aio()` waits for the result.
 
-Functions executed by OuterProduct can also use `async def`. Inside an async function, `client.run.aio()`, `call.wait.aio()`, and `client.map.aio()` provide awaitable versions of the same operations. The relationship between Runs and Calls remains the same: calls submitted through the function’s supplied client belong to the current Run.
+Functions executed by OuterProduct can also use `async def`. Inside an async function, `client.run.aio()`, `call.wait.aio()`, and `client.map.aio()` provide awaitable versions of the same operations. 
