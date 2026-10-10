@@ -1,0 +1,37 @@
+---
+title: "Introduction"
+---
+
+OuterProduct is AI infrastructure built around **Liquid Execution**: you define what your application does, and OuterProduct handles where and how it runs. Build workloads that go:
+
+- **Wide:** Run work in parallel across many CPUs and GPUs.
+- **Deep:** Run long sequences of steps that recover from failures.
+- **Heterogeneous:** Mix hardware, dependencies, and runtime environments.
+
+There is no more need to adapt your code to the underlying infrastructure. You can now run anything, anywhere, for as long as it takes. 
+
+```python
+run = client.run(
+    fn=train_shakespeare_model,
+    args=("tiny-shakespeare.txt",),
+    image=op.Image.from_registry("pytorch/pytorch:2.11.0-cuda12.8-cudnn9-runtime"),
+    gpu_type="H100",
+    retry_strategy=op.RetryStrategy(max_attempts=3),
+)
+
+model = run.wait()
+```
+
+## How does it work?
+
+OuterProduct packages your Python code into containers, runs it on cloud infrastructure, and scales capacity with demand. You do not need to provision or manage servers. Dependencies, environments, and hardware requirements are defined directly in code.
+
+As your application runs, OuterProduct tracks its graph of calls, checkpoints completed work, and retries failed steps. Execution picks up where it left off, without repeating successful work.
+
+## What can you do with it?
+
+Liquid Execution makes it possible to build applications such as:
+
+- **Multi-agent systems** that work across large datasets, with automatic retries and fine-grained access to compute, data, and artifacts.
+- **Distributed training and hyper-parameter searches** across GPUs, with managed checkpoints and evaluation artifacts.
+- **Long-running data and inference pipelines** that resume after failures.

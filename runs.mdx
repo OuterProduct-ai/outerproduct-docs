@@ -1,0 +1,154 @@
+---
+title: "Runs"
+---
+
+A Run is a remote execution of your code on OuterProduct. It starts with a single function call and can include additional child function calls launched from within it. Each call can have its own image, compute resources, and configuration.
+
+## Runs, Calls, and Attempts
+
+OuterProduct tracks execution at three levels:
+
+- **Run:** The complete execution, including the initial function call and any calls it launches.
+- **Call:** One function invocation submitted through the SDK with its arguments and execution settings. Every Run starts with a root Call.
+- **Attempt:** One try at executing a Call. Retrying a Call creates another Attempt for that Call within the same Run.
+
+A Run can contain many Calls, and each Call can have multiple Attempts. The UI shows this structure alongside execution status and logs.
+
+See [Retries and durability](/retries-and-durability) for retry configuration and behavior.
+
+## Running a function
+
+To create a Run in OuterProduct, write a Python function that takes an OuterProduct  `client`  as its first parameter. Then, submit your function using `client.run()`, specifying the function to run, along with its arguments and compute requirements. 
+
+```python
+import outerproduct_sdk as op
+
+def sum_batch(client, values):
+    return sum(values)
+
+client = op.init()
+image = op.Image.from_registry("python:3.13-slim")
+
+run = client.run(
+    fn=sum_batch,
+    args=([1, 2, 3],),
+    image=image,
+)
+
+print(run.wait())  # 6
+```
+
+OuterProduct supplies the function’s `client` argument automatically. The remaining positional arguments can be supplied through the `args` parameter, and named arguments can be supplied through `kwargs`.
+
+`client.run()` returns a handle to the Run after submission, without waiting for execution to complete. Calling `.wait()` blocks until the Run completes and returns the function’s result. 
+
+In addition to the function, arguments, and image, `client.run()` accepts various execution settings for the root Call:
+
+- [Hardware](/hardware) resources, including CPU and GPU requirements.
+- [Environment Variables](/env-vars) for the execution runtime.
+- [Volumes](/volumes) to mount in the remote container's filesystem.
+- [Retry settings](/retries-and-durability) for the root Call. 
+
+### Arguments and results
+
+OuterProduct serializes functions, arguments, and return values using `cloudpickle`. Arguments and results can be any Python objects that support this serialization.
+
+<Note>
+  Large arrays, datasets, model weights, and other large inputs or outputs are often better stored in a [Volume](/volumes) and managed through volume mounts.
+</Note>
+
+## Nested calls
+
+In the example above, we created a Run to execute a single function remotely using client.run(). This Run only consisted of a single function Call. More complex Runs often involve several nested Calls, each with possibly distinct computational requirements.
+
+To create a nested call, simply call `client.run()` inside a function that is part of a Run. When invoked inside a function, `client.run()` creates a child Call in the current Run and returns a `Call` handle. The parent can submit multiple child Calls before waiting for their results, allowing the children to execute concurrently.
+
+For example, a parent function can sum two batches independently and combine their results:
+
+```python
+def sum_batches(client, first_batch, second_batch):
+    first = client.run(
+        fn=sum_batch,
+        args=(first_batch,),
+        image=image,
+    )
+    second = client.run(
+        fn=sum_batch,
+        args=(second_batch,),
+        image=image,
+    )
+
+    return first.wait() + second.wait()
+
+
+run = client.run(
+    fn=sum_batches,
+    args=([1, 2, 3], [4, 5, 6]),
+    image=image,
+)
+
+print(run.wait())  # 21
+```
+
+This creates one Run with three Calls: the root Call to `sum_batches` and two child Calls to `sum_batch`. Both children are submitted before the parent calls `.wait()`.
+
+Each child Call is configured separately, with its own image, compute resources, environment variables, volume mounts, and retry settings.
+
+When the parent function exits, OuterProduct requests cancellation of any unfinished child Calls. In this example, the parent waits for both children before returning its result.
+
+## Mapping over inputs
+
+`client.map()` applies a function to a collection of inputs concurrently and returns the results as a list in input order. Unlike `client.run()` , it returns results directly, so no additional `.wait()` is needed.
+
+It can replace repeated `client.run()` calls when each input needs the same processing.
+
+```python
+def sum_batches(client, batches):
+    results = client.map(
+        sum_batch,
+        batches,
+        image=image,
+    )
+    # results contains [6, 15, 24] for the batches below.
+    return sum(results)
+
+
+run = client.run(
+    fn=sum_batches,
+    args=([[1, 2, 3], [4, 5, 6], [7, 8, 9]],),
+    image=image,
+)
+
+print(run.wait())  # 45
+```
+
+In this example, each batch produces one Call to `sum_batch`, with the batch passed as its `values` argument. Here, the Run contains one root Call and three child Calls. The parent combines their results after `client.map()` completes.
+
+Inside a running function, `client.map()` creates child Calls in the current Run. From local code, it creates a separate Run for each input.
+
+TODO: I think .map() should return an Iterator instead of a list. Fix this then update docs.
+
+## Async usage
+
+The `.aio()` interface allows SDK operations to be awaited without blocking the calling event loop.
+
+```python
+import asyncio
+
+
+async def main():
+    run = await client.run.aio(
+        fn=sum_batch,
+        args=([1, 2, 3],),
+        image=image,
+    )
+    result = await run.wait.aio()
+    print(result)  # 6
+
+
+asyncio.run(main())
+```
+
+`await client.run.aio()` returns a handle after submission. `await run.wait.aio()` waits for the result.
+
+Functions executed by OuterProduct can also use `async def`. Inside an async function, `client.run.aio()`, `call.wait.aio()`, and `client.map.aio()` provide awaitable versions of the same operations. 

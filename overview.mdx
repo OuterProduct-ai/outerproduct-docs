@@ -1,0 +1,45 @@
+---
+title: "Overview"
+---
+
+`client.run()` submits a Python function for asynchronous execution on OuterProduct'. It packages the function and its arguments with the software dependencies, hardware, environment, and durability settings required to run it.
+
+Calling `client.run()` returns immediately with a handle to the Run. Call `.wait()` when you need its result.
+
+```python
+import outerproduct_sdk as op
+
+
+def my_application(_client, input_path):
+    # ...
+    return f"Processed {input_path}"
+
+
+client = op.init()
+
+run = client.run(
+    fn=my_application,
+    args=("/data/input.json",),
+    image=op.Image.from_registry("python:3.12-slim"),
+    cpu=4,
+    memory_bytes=16 * 1024**3,
+    gpu_type="L4",
+    env_vars={"ENVIRONMENT": "production"},
+    volumes={"/data": data_volume},
+    retry_strategy=op.RetryStrategy(max_attempts=3),
+)
+
+result = run.wait()
+```
+
+Each argument to `client.run()` controls one part of the execution:
+
+- **Function (**`fn`**):** The Python function to execute. It may be synchronous or asynchronous and must accept an OuterProduct client as its first argument.
+- **Arguments (**`args `**and** `kwargs`**):** The values passed to the function after its client argument. Arguments must be serializable.
+- **Image (**`image`**):** The container environment in which the function runs. The image defines the operating system, Python runtime, and installed dependencies.
+- **Hardware (**`cpu`**,** `memory_bytes`**,** `gpu`**, and** `gpu_type`**):** The compute resources assigned to the function. You can choose the number of CPUs, available memory, GPU count, and GPU type.
+- **Environment variables (**`env_vars`**):** Configuration injected into the container. Values can be plain strings or securely stored OuterProduct secrets.
+- **Volumes (**`volumes`**):** Persistent storage mounted inside the container. Each entry maps a container path, such as `/data`, to an OuterProduct Volume.
+- **Retry strategy (**`retry_strategy`**):** Controls how OuterProduct responds when an attempt fails. For example, `max_attempts=3` allows a Call to be attempted up to three times.
+
+The following pages cover each of these options in more detail.

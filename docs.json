@@ -26,75 +26,49 @@
   },
   "navbar": {},
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Documentation",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "introduction",
-              "installation"
-            ],
-            "expanded": true
-          },
-          {
-            "group": "Concepts",
-            "pages": [
-              "guides/workspaces",
-              "guides/training",
-              "guides/explanations"
-            ],
-            "icon": "book"
-          },
-          {
-            "group": "Data Connectors",
-            "pages": [
-              "guides/connectors/s3",
-              "guides/connectors/databricks",
-              "guides/connectors/snowflake"
-            ]
-          },
-          {
-            "group": "MCP Server",
-            "pages": [
-              "mcp/overview",
-              "mcp/prompts"
-            ],
-            "hidden": true
-          }
+        "group": "Getting started",
+        "pages": [
+          "untitled-page",
+          "untitled-page-2"
         ]
       },
       {
-        "tab": "SDK Reference",
-        "groups": [
-          {
-            "group": "Core",
-            "pages": [
-              "sdk/init",
-              "sdk/dataset",
-              "sdk/trainer"
-            ]
-          },
-          {
-            "group": "Models",
-            "pages": [
-              "sdk/model",
-              "sdk/reasoning"
-            ]
-          },
-          {
-            "group": "Connectors",
-            "pages": [
-              "sdk/connectors"
-            ]
-          }
-        ],
-        "hidden": true
+        "group": "Execution",
+        "pages": [
+          "overview",
+          "images",
+          "hardware",
+          "env-vars",
+          "volumes",
+          "runs",
+          "retries-and-durability"
+        ]
       },
       {
-        "tab": "API Reference",
-        "openapi": "https://api.outerproduct.com/openapi.json"
+        "group": "Governance",
+        "pages": [
+          "secrets",
+          "users-and-groups",
+          "policies"
+        ]
+      },
+      {
+        "group": "SDK Reference",
+        "hidden": true,
+        "pages": []
+      },
+      {
+        "group": "API Reference",
+        "pages": []
+      },
+      {
+        "group": "Templates",
+        "pages": [
+          "title",
+          "mcp/prompts"
+        ]
       }
     ]
   }
