@@ -38,7 +38,7 @@ print(run.wait())  # 6
 
 OuterProduct supplies the function’s `client` argument automatically. The remaining positional arguments can be supplied through the `args` parameter, and named arguments can be supplied through `kwargs`.
 
-`client.run()` returns a handle to the Run after submission, without waiting for execution to complete. Calling `.wait()` locks until the Run completes and returns the function’s result. 
+`client.run()` returns a handle to the Run after submission, without waiting for execution to complete. Calling `.wait()` blocks until the Run completes and returns the function’s result. 
 
 In addition to the function, arguments, and image, `client.run()` accepts various execution settings for the root Call:
 
