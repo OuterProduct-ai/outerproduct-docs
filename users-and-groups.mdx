@@ -42,14 +42,18 @@ Synced accounts and groups appear under **Users** in the dashboard.
 
 A directory connection can be linked to an existing sign-in provider during setup. This allows a provisioned user to sign in to the corresponding OuterProduct account.
 
-For this association, the directory’s SCIM `externalId` must match the user’s OIDC `sub`, the identifier supplied by the sign-in provider. \<Note> Configure this link before users first sign in through that provider. Existing accounts are not automatically converted to directory-managed accounts. \</Note>
+For this association, the directory’s SCIM `externalId` must match the user’s OIDC `sub`, the identifier supplied by the sign-in provider. 
 
-## Creating users
+<Note>
+  Configure this link before users first sign in through that provider. Existing accounts are not automatically converted to directory-managed accounts.
+</Note>
 
-Users can also be created directly in the dashboard:
+## Creating users through the UI
+
+Users can also be created directly in the UI:
 
 1. Open **Users** and select **Add user**.
 2. Enter the user’s email address and, optionally, their first and last names.
 3. Choose whether sign-in is enabled, then create the user.
 
-Creating a user adds an OuterProduct account. Authentication is configured separately through the available sign-in methods. For users created in OuterProduct, the dashboard allows administrators to update profile details and enable or disable sign-in. Directory-managed users are updated
+Creating a user adds an OuterProduct account. Authentication is configured separately through the available sign-in methods. For users created in OuterProduct, the UI allows administrators to update profile details and enable or disable sign-in. Directory-managed users are updated
