@@ -1,3 +1,51 @@
 ---
 title: "Users & Groups"
 ---
+
+Users represent individual accounts in OuterProduct. Groups collect users so that access can be managed for a team, such as Engineering or Research.
+
+The dashboard supports creating users and groups directly or syncing them from an external directory. /policies define their access to OuterProduct resources.
+
+## Connecting an identity provider
+
+Identity providers serve two separate purposes:
+
+- **Sign-in:** Users authenticate with their existing accounts through OpenID Connect (OIDC) or a supported OAuth provider.
+- **Directory sync:** Users, groups, and memberships are provisioned through SCIM, keeping OuterProduct aligned with your organization’s directory.
+
+These connections are configured separately. Connecting a directory does not enable sign-in automatically.
+
+### Configuring sign-in
+
+Sign-in providers are currently configured by an administrator in `op.toml` and become available after the OuterProduct server restarts.
+
+The dashboard’s **Identity Providers** page lists configured providers and their connection details, including the redirect URI used when registering OuterProduct with the provider.
+
+### Syncing users and groups
+
+OuterProduct supports SCIM 2.0 provisioning, with setup flows for Microsoft Entra ID, Okta, and other SCIM-compatible directories.
+
+To connect a directory:
+
+1. Open **Identity Providers** in the dashboard and select **Add directory**.
+2. Choose your provider and name the connection.
+3. Copy the OuterProduct SCIM endpoint and access token into your provider’s provisioning settings.
+4. Select the users and groups to sync, then enable provisioning in your provider. \<Note> The SCIM access token is shown only once. Copy it before leaving the setup page. \</Note>
+
+Synced accounts and groups appear under **Users** in the dashboard. Their profiles, sign-in status, and group memberships are managed in the connected directory.
+
+### Linking provisioning to sign-in
+
+A directory connection can be linked to an existing sign-in provider during setup. This allows a provisioned user to sign in to the corresponding OuterProduct account.
+
+For this association, the directory’s SCIM `externalId` must match the user’s OIDC `sub`, the identifier supplied by the sign-in provider. \<Note> Configure this link before users first sign in through that provider. Existing accounts are not automatically converted to directory-managed accounts. \</Note>
+
+## Creating users
+
+Users can also be created directly in the dashboard:
+
+1. Open **Users** and select **Add user**.
+2. Enter the user’s email address and, optionally, their first and last names.
+3. Choose whether sign-in is enabled, then create the user.
+
+Creating a user adds an OuterProduct account. Authentication is configured separately through the available sign-in methods. For users created in OuterProduct, the dashboard allows administrators to update profile details and enable or disable sign-in. Directory-managed users are updated
