@@ -23,13 +23,13 @@ To create a Run in OuterProduct, create a Python function that takes an OuterPro
 ```python
 import outerproduct_sdk as op
 
-def sum_batch(client, values):
+def sum(client, values):
     return sum(values)
 
 client = op.init()
 run = client.run(
     fn=sum_batch,
-    args=([1, 2, 3],),
+    args=([1, 2, 3]),
     image=image,
 )
 
