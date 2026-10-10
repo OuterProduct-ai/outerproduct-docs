@@ -12,7 +12,7 @@ OuterProduct tracks execution at three levels, enabling robust, multi-step workf
 - **Call:** One function invocation submitted through the SDK, with its arguments and execution settings. Every Run starts with a root Call that could potentially launch child Calls.
 - **Attempt:** One try at executing a Call. When a Call is retried, it receives another Attempt within the same Run. See [Retries and Durability](/retries-and-durability) for further discussion of retries.
 
-A Run can contain many Calls, and each Call can have multiple Attempts. The OuterProduct dashboard shows this structure alongside execution status and logs.
+A Run can contain many Calls, and each Call can have multiple Attempts. The OuterProduct dashboard shows this nested structure alongside execution status and logs.
 
 ## Running a function
 
