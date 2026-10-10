@@ -122,11 +122,11 @@ run = client.run(
 print(run.wait())  # 45
 ```
 
-Each batch produces one Call to `sum_batch`, with the batch passed as its `values` argument. Here, the Run contains one root Call and three child Calls. The parent combines their results after `client.map()` completes.
+In this example, each batch produces one Call to `sum_batch`, with the batch passed as its `values` argument. Here, the Run contains one root Call and three child Calls. The parent combines their results after `client.map()` completes.
 
 Inside a running function, `client.map()` creates child Calls in the current Run. From local code, it creates a separate Run for each input.
 
-TODO: I think .map() should return an Iterator instead of a list. Check this
+TODO: I think .map() should return an Iterator instead of a list. Fix this then update docs.
 
 ## Async usage
 
