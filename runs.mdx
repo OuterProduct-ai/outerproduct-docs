@@ -92,7 +92,7 @@ This creates one Run with three Calls: the root Call to `sum_batches` and two ch
 
 Each child Call specifies its own image and execution settings. Compute resources, environment variables, volume mounts, and retry settings are configured separately for each Call. Child Calls can also launch further child Calls within the same Run.
 
-Child Calls still running when their parent function returns are cancelled. In this example, the parent waits for both children before returning.
+When the parent function exits, OuterProduct cancels any unfinished child Calls. In this example, the parent waits for both children before returning its result.
 
 ## Mapping over inputs
 
