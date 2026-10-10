@@ -36,14 +36,16 @@ run = client.run(
 print(run.wait())  # 6
 ```
 
-In addition to taking as input the function to run remotely, the function's arguments, and the Image required for execution, `client.run()` also accepts 
+OuterProduct supplies the function’s `client` argument automatically. Positional arguments supplied through `args` follow it; named arguments can be supplied through `kwargs`.
 
-- the hardware requiremtns, such as cpu or gpu and gpu type
-- environment variables
-- volume mounts
-- retry settings for the root call
+`client.run()` returns a `Run` handle after submission, without waiting for execution to complete. `run.wait()` blocks until the Run completes and returns the function’s result. It raises `RunFailed` if the Run fails or is cancelled.
 
-`client.run()` returns a handle to that run's execution, whose result can be obtained using the `.wait()` method
+In addition to the function, arguments, and image, `client.run()` accepts execution settings for the root Call:
+
+- Compute resources, including CPU and GPU requirements.
+- [Environment variables](/environment-variables).
+- [Volume mounts](/volumes).
+- [Retry settings](/retries-and-durability).
 
 ### Arguments and results
 
