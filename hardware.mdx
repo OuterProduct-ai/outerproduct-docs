@@ -60,7 +60,7 @@ run = client.run(
 
 `gpu=2` assigns two GPUs to the same worker and container. It does not start two workers or divide the function into two Calls. Your code must use a multi-GPU framework such as PyTorch Distributed to take advantage of both GPUs.
 
-To run independent work across multiple workers, create multiple Calls with one GPU instead.
+To run independent work across multiple workers, use /cod create multiple Calls with one GPU instead.
 
 Your Image must also contain the drivers and libraries required by your application, such as a CUDA-enabled build of PyTorch.
 
