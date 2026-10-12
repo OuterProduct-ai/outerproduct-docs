@@ -91,23 +91,10 @@ The visual builder is the simplest way to create a policy. It generates Cedar ba
 
 1. Select **New policy**.
 2. Choose the principals to which the policy applies. A policy can apply to one specific user, a selected set of users, or all users. 
-3. Choose a resource type and one or more actions. The builder offers convenient presets for Read only, Contributor, and Full access
+3. Choose a resource type and one or more actions. The builder offers convenient presets for Read only, Contributor, and Full access.
 4. Select whether the policy allows or denies those actions.
 5. Choose one resource or all resources of that type.
 6. Review the generated Cedar and save the policy.
-
-#### Choosing actions
-
-After selecting a resource type, the builder displays the actions available for that type.
-
-The builder also offers convenient presets:
-
-- **Read only** selects read and list operations.
-- **Contributor** selects read operations plus common use, write, and execution operations.
-- **Full access** selects every action available for the resource type.
-- **Custom access** lets you select individual actions.
-
-These presets are shortcuts for selecting actions. They are not permanent roles, and the policy ultimately stores the individual Cedar actions shown in the preview.
 
 #### Choosing an effect
 
