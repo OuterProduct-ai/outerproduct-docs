@@ -55,17 +55,13 @@ Account::"account"
 
 ### Policy
 
-A **policy** is a rule that either permits or forbids access.
-
-A policy contains:
+A **policy** is a rule that either permits or forbids access. The rule contains:
 
 - An **effect**: `permit` or `forbid`
-- A principal constraint
-- An action constraint
-- A resource constraint
+- A **principal** constraint
+- An **action** constraint
+- A **resource** constraint
 - Optionally, a `when` or `unless` condition
-
-Policies are evaluated together. They are not processed from top to bottom, and there is no “first matching policy wins” behavior.
 
 ### Permit and forbid
 
