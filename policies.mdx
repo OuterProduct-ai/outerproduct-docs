@@ -125,7 +125,22 @@ Policies can also be created, updated, listed, and deleted through the Policy AP
 - A server-assigned policy identifier
 - An ETag used to protect updates from concurrent changes
 
-Policies created through the API use the same validation and authorization rules as policies created in the dashboard.
+Create a policy by sending its Cedar statement to the Policy API:
+
+```shellscript
+curl "$OUTERPRODUCT_API_URL/outerproduct.policy.v1alpha.PolicyService/CreatePolicy" \
+  -H "Authorization: Bearer $OUTERPRODUCT_API_KEY" \
+  -H "Connect-Protocol-Version: 1" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "policy": {
+      "displayName": "Analytics readers",
+      "statement": "permit (principal in Group::\"groups/analytics\", action == Action::\"volume_read\", resource == Volume::\"volumes/VOLUME_ID\");"
+    }
+  }'
+```
+
+The caller must have `create_policy` permission for the policy’s resource. The response includes the policy’s server-assigned name and ETag.
 
 ## Available actions
 
