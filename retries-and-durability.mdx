@@ -76,9 +76,7 @@ run = client.run(
 )
 ```
 
-`max_attempts` includes the first Attempt. In this example, OuterProduct can try the Call up to three times.
-
-If no retry strategy is provided, the Call receives one Attempt and is not retried automatically.
+`max_attempts` includes the first Attempt. In this example, OuterProduct can try the Call up to three times. If no retry strategy is provided, the Call receives one Attempt and is not retried automatically.
 
 Each Call defines its own retry strategy. A parent and its children can therefore use different limits:
 
