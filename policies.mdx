@@ -96,27 +96,6 @@ The visual builder is the simplest way to create a policy. It generates Cedar ba
 5. Choose one resource or all resources of that type.
 6. Review the generated Cedar and save the policy.
 
-#### Choosing resources
-
-A policy can apply to:
-
-- One specific resource
-- Every resource of a selected type
-
-For example, a policy for one volume generates an exact resource constraint:
-
-```text
-resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
-```
-
-A policy for all volumes generates a type constraint:
-
-```text
-resource is Volume
-```
-
-“All volumes” also includes volumes created in the future.
-
 ### Writing Cedar directly
 
 Select the **Cedar** editor when you need more control than the visual builder provides.
