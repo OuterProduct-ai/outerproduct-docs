@@ -191,45 +191,6 @@ The current policy model includes the following major resource-specific actions.
   </tbody>
 </table>
 
-## How policies are evaluated
-
-When a user attempts an operation, OuterProduct evaluates:
-
-```text
-principal + action + resource
-```
-
-The decision includes all applicable built-in and user-defined policies.
-
-Access is allowed only when:
-
-1. At least one matching policy permits the request.
-2. No matching policy forbids the request.
-
-If no policy permits the request, access is denied. This is known as **default deny**.
-
-For example, suppose one policy grants a group permission to execute runs:
-
-```text
-permit (
-    principal in Group::"groups/operators",
-    action == Action::"execute_run",
-    resource is Run
-);
-```
-
-Another policy forbids execution of one particular run:
-
-```text
-forbid (
-    principal is User,
-    action == Action::"execute_run",
-    resource == Run::"runs/fedcba98-7654-3210-fedc-ba9876543210"
-);
-```
-
-Members of the operators group can execute other runs, but they cannot execute the specifically denied run.
-
 ## Built-in access
 
 OuterProduct includes built-in policies for common ownership and self-service behavior. Among other things, these policies allow users to:
