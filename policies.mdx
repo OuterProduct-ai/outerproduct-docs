@@ -45,17 +45,13 @@ Actions are specific to a resource type. For example, `volume_write` applies to 
 
 ### Resource
 
-The **resource** is the object on which the action is attempted. Examples include a volume, secret, run, file tree, user, group, or the OuterProduct account.
-
-Resources use typed, canonical identifiers:
+The **resource** is the object on which the action is attempted, such as a volume, secret, run, user, or group. Resources use typed canonical identifiers:
 
 ```text
 Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
 Secret::"secrets/01234567-89ab-cdef-0123-456789abcdef"
 Account::"account"
 ```
-
-The type and identifier are both significant and case-sensitive.
 
 ### Policy
 
