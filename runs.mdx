@@ -129,7 +129,7 @@ Inside a running function, `client.map()` creates child Calls in the current Run
 <Note>
   When called from inside a running function, `client.map()` creates parallel child Calls within the current Run. So, if the parent function retries, completed child results are reused. See [Retries & Durability](/retries-and-durability) for more on how retries behave within a single Run.
 
-  However, when called directly from local code, each input creates a separate Run with its own retries and durability boundary. So, calling `client.map()` again from local code starts new Runs for every input, including inputs that previously completed successfully. 
+  However, when `client.map()` is called directly from local code, each input creates a separate Run with its own retries and durability boundary. So, calling `client.map()` again from local code starts new Runs for every input, including inputs that previously completed successfully. 
 </Note>
 
 ## Async usage
