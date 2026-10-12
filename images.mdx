@@ -86,3 +86,7 @@ model = run.wait()
 ```
 
 Each Call can use a different Image, allowing one application to combine functions with different dependencies and runtime environments.
+
+<Info>
+  Creating the same op.Image inline or assigning it to a variable has identical build and caching behavior. OuterProduct caches images by recipe content, not Python object identity. Assign images to variables when it improves readability
+</Info>
