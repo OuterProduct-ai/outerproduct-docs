@@ -92,15 +92,9 @@ The visual builder is the simplest way to create a policy. It generates Cedar ba
 1. Select **New policy**.
 2. Choose the principals to which the policy applies. A policy can apply to one specific user, a selected set of users, or all users. 
 3. Choose a resource type and one or more actions. The builder offers convenient presets for Read only, Contributor, and Full access.
-4. Select whether the policy allows or denies those actions.
+4. Select whether the policy allows or denies those actions. Note that a matching deny overrides access granted by any other policy.
 5. Choose one resource or all resources of that type.
 6. Review the generated Cedar and save the policy.
-
-#### Choosing an effect
-
-Select **Allow** to generate a `permit` policy or **Deny** to generate a `forbid` policy.
-
-Use deny policies carefully. A matching deny overrides access granted by any other policy.
 
 #### Choosing resources
 
