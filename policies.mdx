@@ -85,6 +85,10 @@ An `unless` condition has the inverse meaning: the policy applies unless the exp
 
 ## Creating a policy
 
+<Warning>
+  Policies are themselves protected resources. A user must have the appropriate policy-management action, such as `create_policy`, `update_policy`, or `delete_policy`, for the policy’s scope.
+</Warning>
+
 ### Using the visual builder
 
 The visual builder is the simplest way to create a policy. It generates Cedar based on the selections you make. To create a policy, open **Policies** in the dashboard and click **New policy**:
