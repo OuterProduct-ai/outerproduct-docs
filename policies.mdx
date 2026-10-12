@@ -117,7 +117,9 @@ permit (
 
 ### Creating policies through the API
 
-Policies can also be created, updated, listed, and deleted through the Policy API. This is useful when policies are managed through automation or an infrastructure workflow. An API-created policy contains the same fields as a dashboard policy:
+Policies can also be created, updated, listed, and deleted through the Policy API. This is useful when policies are managed through automation or an infrastructure workflow. An API-created policy contains the same fields as a dashboard policy.
+
+The caller must have `create_policy` permission for the policy’s resource. The response includes the policy’s server-assigned name and ETag.
 
 - An optional display name
 - An optional description
@@ -141,21 +143,6 @@ curl "$OUTERPRODUCT_API_URL/outerproduct.policy.v1alpha.PolicyService/CreatePoli
 ```
 
 `displayName` and `description` are optional.
-
-```shellscript
-curl "$OUTERPRODUCT_API_URL/outerproduct.policy.v1alpha.PolicyService/CreatePolicy" \
-  -H "Authorization: Bearer $OUTERPRODUCT_API_KEY" \
-  -H "Connect-Protocol-Version: 1" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "policy": {
-      "displayName": "Analytics readers",
-      "statement": "permit (principal in Group::\"groups/analytics\", action == Action::\"volume_read\", resource == Volume::\"volumes/VOLUME_ID\");"
-    }
-  }'
-```
-
-The caller must have `create_policy` permission for the policy’s resource. The response includes the policy’s server-assigned name and ETag.
 
 ## Available actions
 
