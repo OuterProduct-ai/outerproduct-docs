@@ -2,9 +2,9 @@
 title: "Retries & Durability"
 ---
 
-OuterProduct applications form a computation graph. Each function invocation is a **Call**, and a Call can create child Calls by using the scoped client it receives as its first argument.
+OuterProduct applications form a computation graph. Each function invocation is a **Call**. The top-level `client.run()` creates a new Run and its root Call. Inside that function, the scoped client creates child Calls within the same Run.
 
-This hierarchy allows OuterProduct to track each piece of work independently:
+This hierarchy allows OuterProduct to track each Call independently:
 
 ```text
 Run
@@ -13,8 +13,6 @@ Run
     ├── train_model
     └── evaluate_model
 ```
-
-The top-level `client.run()` creates a new Run and its root Call. Inside that function, the scoped client creates child Calls within the same Run.
 
 ```python
 import outerproduct_sdk as op
