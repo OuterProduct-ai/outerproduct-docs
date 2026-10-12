@@ -2,45 +2,220 @@
 title: "Policies"
 ---
 
-OuterProduct uses Cedar for platform authorization. The most useful framing for the documentation is:
+OuterProduct uses [Cedar](https://www.cedarpolicy.com/) for policy management. Cedar is an authorization language: it describes who may perform which actions on which resources.
 
-> A policy answers: “May this principal perform this action on this resource?”
+A Cedar policy answers a question like:
 
-For example:
+> May this user read this volume?
+
+A basic policy has three parts:
 
 ```text
 permit (
     principal == User::"users/01234567-89ab-cdef-0123-456789abcdef",
-    action in [Action::"volume_read", Action::"volume_write"],
+    action == Action::"volume_read",
     resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
 );
 ```
 
-## Ways to define policies
+This policy permits one user to read one volume.
 
-There are three related—but operationally different—paths.
+## Key concepts
 
-### 1. Dashboard visual builder
+### Principal
 
-Under **Policies → New policy → Visual builder**, the user chooses:
+The **principal** is the identity attempting an action. In OuterProduct, a principal is normally the authenticated user making the request.
 
-- Principals: one user, selected users, all users, or everyone
-- Actions: actions applicable to a selected resource type
-- A preset:
-  - **Read only** selects names matching `get_*`, `list_*`, `read_*`, `*_read`, `*_browse`, or `*_select`
-  - **Contributor** adds actions matching `use_*`, `execute_*`, `*_use`, and `*_write`
-  - **Full access** selects every applicable action
-  - Individual actions can also be selected
-- Effect: **Allow** or **Deny**
-- Resources: one resource or every resource of that type
+Users have canonical identifiers such as:
 
-The builder generates ordinary Cedar source; it does not create a separate kind of policy. The generated source can be previewed and copied.
+```text
+User::"users/01234567-89ab-cdef-0123-456789abcdef"
+```
 
-### 2. Dashboard Cedar editor
+A user can also be a member of one or more groups. A policy can grant access through group membership:
 
-Selecting the **Cedar** tab exposes the policy statement directly. This enables expressions that the visual builder cannot currently represent conveniently, such as group membership or custom `when`/`unless` conditions.
+```text
+principal in Group::"groups/analytics"
+```
 
-For example, granting a group read access:
+Group membership alone does not grant access. A policy must refer to the group.
+
+### Action
+
+An **action** is the operation the principal wants to perform. Examples include:
+
+```text
+Action::"volume_read"
+Action::"volume_write"
+Action::"secret_use"
+Action::"execute_run"
+```
+
+Actions are specific to a resource type. For example, `volume_write` applies to volumes, while `execute_run` applies to runs.
+
+### Resource
+
+The **resource** is the object on which the action is attempted. Examples include a volume, secret, run, file tree, user, group, or the OuterProduct account.
+
+Resources use typed, canonical identifiers:
+
+```text
+Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
+Secret::"secrets/01234567-89ab-cdef-0123-456789abcdef"
+Account::"account"
+```
+
+The type and identifier are both significant and case-sensitive.
+
+### Policy
+
+A **policy** is a rule that either permits or forbids access.
+
+A policy contains:
+
+- An **effect**: `permit` or `forbid`
+- A principal constraint
+- An action constraint
+- A resource constraint
+- Optionally, a `when` or `unless` condition
+
+Policies are evaluated together. They are not processed from top to bottom, and there is no “first matching policy wins” behavior.
+
+### Permit and forbid
+
+A `permit` policy grants access when all its constraints and conditions match:
+
+```text
+permit (
+    principal is User,
+    action == Action::"volume_read",
+    resource is Volume
+);
+```
+
+A `forbid` policy explicitly denies access:
+
+```text
+forbid (
+    principal is User,
+    action == Action::"secret_use",
+    resource is Secret
+);
+```
+
+A matching `forbid` overrides every matching `permit`.
+
+### Conditions
+
+A policy can use a `when` condition to apply only when an additional expression is true:
+
+```text
+permit (
+    principal is User,
+    action == Action::"volume_read",
+    resource is Volume
+)
+when {
+    resource has created_by &&
+    resource.created_by == principal
+};
+```
+
+An `unless` condition has the inverse meaning: the policy applies unless the expression is true.
+
+### Policy schema
+
+OuterProduct maintains a Cedar **schema** that defines:
+
+- Valid principal and resource types
+- Valid actions
+- Which actions apply to which resource types
+- Attributes available on resources
+
+Every new or updated policy is validated against this schema. A policy with an unknown action, incompatible resource type, or invalid expression cannot be saved.
+
+## Creating a policy
+
+Policies can be created in the dashboard using either the visual builder or the Cedar editor. Both create the same kind of policy and are enforced in exactly the same way.
+
+### Using the visual builder
+
+The visual builder is the simplest way to create a policy. It generates Cedar based on the selections you make.
+
+To create a policy:
+
+1. Open **Policies** in the dashboard.
+2. Select **New policy**.
+3. Choose the principals to which the policy applies.
+4. Choose a resource type and one or more actions.
+5. Select whether the policy allows or denies those actions.
+6. Choose one resource or all resources of that type.
+7. Review the generated Cedar and save the policy.
+
+#### Choosing principals
+
+A policy can apply to:
+
+- One specific user
+- A selected set of users
+- All users
+- Every compatible identity
+
+The summary panel shows the selected principal scope before the policy is saved.
+
+#### Choosing actions
+
+After selecting a resource type, the builder displays the actions available for that type.
+
+The builder also offers convenient presets:
+
+- **Read only** selects read and list operations.
+- **Contributor** selects read operations plus common use, write, and execution operations.
+- **Full access** selects every action available for the resource type.
+- **Custom access** lets you select individual actions.
+
+These presets are shortcuts for selecting actions. They are not permanent roles, and the policy ultimately stores the individual Cedar actions shown in the preview.
+
+#### Choosing an effect
+
+Select **Allow** to generate a `permit` policy or **Deny** to generate a `forbid` policy.
+
+Use deny policies carefully. A matching deny overrides access granted by any other policy.
+
+#### Choosing resources
+
+A policy can apply to:
+
+- One specific resource
+- Every resource of a selected type
+
+For example, a policy for one volume generates an exact resource constraint:
+
+```text
+resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
+```
+
+A policy for all volumes generates a type constraint:
+
+```text
+resource is Volume
+```
+
+“All volumes” also includes volumes created in the future.
+
+### Writing Cedar directly
+
+Select the **Cedar** editor when you need more control than the visual builder provides.
+
+The Cedar editor is useful for:
+
+- Granting access through group membership
+- Writing additional `when` or `unless` conditions
+- Combining several principal or resource conditions
+- Creating narrowly tailored deny rules
+- Reviewing or editing the exact policy source
+
+For example, the following policy gives members of the analytics group read access to one volume:
 
 ```text
 permit (
@@ -50,77 +225,174 @@ permit (
 );
 ```
 
-Users are connected to their groups in the Cedar entity hierarchy at evaluation time, so `principal in Group::"..."` evaluates group membership. See [cedar.rs](http://cedar.rs) (crates/iam-authorizer/src/cedar.rs:38).
-
-### 3. Operator-supplied Cedar
-
-Deployments can load a Cedar policy set at control-plane startup:
+Multiple actions can be included in one policy:
 
 ```text
-[control_plane.authorizer.policy]
-kind = "file"
-path = "/etc/outerproduct/operators.cedar"
-```
-
-Or inline:
-
-```text
-[control_plane.authorizer.policy]
-kind = "inline"
-contents = """
 permit (
-    principal in Group::"groups/platform-admins",
-    action,
-    resource
+    principal in Group::"groups/analytics",
+    action in [
+        Action::"volume_read",
+        Action::"volume_write"
+    ],
+    resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
 );
-"""
 ```
 
-These policies form the operator-controlled authorization baseline. They are especially important for bootstrapping administrators who can subsequently create dashboard policies.
-
-Operator policies differ from dashboard policies:
-
-- They may contain a full Cedar policy set.
-- They are loaded at startup, not reread for every request.
-- A missing, unreadable, or invalid file prevents startup.
-- OCI is represented in configuration but currently rejected at runtime.
-- The default `kind = "allow_all"` name is misleading: it supplies an empty operator policy set, not a blanket permit. Built-in and stored policies still determine access.
-
-Configuration types are defined in iam-authorizer-config (crates/iam-authorizer-config/src/lib.rs:23).
-
-## How a decision is made
-
-For an operation, the server constructs a Cedar request containing:
+A type-wide policy can cover every resource of that type:
 
 ```text
-authenticated user + requested action + authoritative resource entity
+permit (
+    principal in Group::"groups/data-science",
+    action == Action::"execute_run",
+    resource is Run
+);
 ```
 
-The effective policy set consists of:
+Each policy saved through the dashboard contains one Cedar statement. Create additional policies when separate rules are easier to understand or manage.
 
-1. Built-in platform policies
-2. Operator policies loaded from configuration
-3. Policies created through the dashboard or Policy API
+When an existing policy is opened, it is shown in the Cedar editor. Switching from Cedar back to the visual builder starts a new visual policy and replaces the current Cedar draft after confirmation.
 
-Cedar then applies these rules:
+### Creating policies through the API
 
-- At least one matching `permit` is required.
-- A matching `forbid` overrides every matching `permit`.
-- If no `permit` matches, access is denied.
-- Policies have no evaluation order or “first match wins” behavior.
-- Evaluation errors do not grant access.
+Policies can also be created, updated, listed, and deleted through the Policy API. This is useful when policies are managed through automation or an infrastructure workflow.
 
-The request context is currently empty. Identity, group membership, ownership, and other resource facts come from trusted server-side records, not from fields supplied by the caller. The central evaluation path is in [cedar.rs](http://cedar.rs) (crates/iam-authorizer/src/cedar.rs:68).
+An API-created policy contains the same fields as a dashboard policy:
 
-Dashboard-created policies are loaded without an authorization cache, so successful edits and revocations affect the next authorization check.
+- An optional display name
+- An optional description
+- A required Cedar statement
+- A server-assigned policy identifier
+- An ETag used to protect updates from concurrent changes
 
-## Built-in behavior
+Policies created through the API use the same validation and authorization rules as policies created in the dashboard.
 
-OuterProduct always includes several non-editable policies:
+## Available actions
 
-- Users may create runs, volumes, file trees, and secrets.
-- Users may read/update themselves and manage their own API keys.
-- A resource’s creator is permitted to perform actions applicable to that resource.
-- A user may not execute a run created by somebody else, even if another policy grants execution.
+The current policy model includes the following major resource-specific actions.
 
-The final point is an example of `forbid` overriding `permit`. The built-ins are assembled in [model.rs](http://model.rs) (crates/iam-authorizer/src/model.rs:36), with their source under policy/ (policy).
+| Resource | Actions |
+| :-- | :-- |
+| Account | Account administration and creation or listing of top-level resources |
+| User | `get_user`, `update_user`, `disable_user`, and API-key actions |
+| Group | `get_group`, `update_group`, `delete_group` |
+| Policy | `get_policy`, `list_policies`, `create_policy`, `update_policy`, `delete_policy` |
+| Volume | `volume_read`, `volume_write`, `volume_manage` |
+| Secret | `secret_read`, `secret_manage`, `secret_use` |
+| File tree | `read_file_tree`, `use_file_tree`, `delete_file_tree` |
+| Run | `read_run`, `execute_run`, `cancel_run`, `delete_run` |
+
+The dashboard shows the exact actions available for the selected resource type.
+
+## How policies are evaluated
+
+When a user attempts an operation, OuterProduct evaluates:
+
+```text
+principal + action + resource
+```
+
+The decision includes all applicable built-in and user-defined policies.
+
+Access is allowed only when:
+
+1. At least one matching policy permits the request.
+2. No matching policy forbids the request.
+
+If no policy permits the request, access is denied. This is known as **default deny**.
+
+For example, suppose one policy grants a group permission to execute runs:
+
+```text
+permit (
+    principal in Group::"groups/operators",
+    action == Action::"execute_run",
+    resource is Run
+);
+```
+
+Another policy forbids execution of one particular run:
+
+```text
+forbid (
+    principal is User,
+    action == Action::"execute_run",
+    resource == Run::"runs/fedcba98-7654-3210-fedc-ba9876543210"
+);
+```
+
+Members of the operators group can execute other runs, but they cannot execute the specifically denied run.
+
+## Built-in access
+
+OuterProduct includes built-in policies for common ownership and self-service behavior. Among other things, these policies allow users to:
+
+- Manage their own user information and API keys
+- Create common resources such as volumes, secrets, file trees, and runs
+- Access resources they created
+
+Ownership is determined from trusted resource metadata maintained by OuterProduct. A caller cannot claim ownership by supplying a `created_by` value.
+
+Built-in policies are evaluated alongside policies created in the dashboard. They cannot be viewed or edited as ordinary dashboard policies.
+
+## Advanced considerations
+
+### Policies are additive
+
+Creating a new policy does not replace an existing policy. All applicable policies participate in the decision.
+
+Splitting access into several small policies is often easier to understand than creating one large policy. For example, read access and management access can be granted separately.
+
+### Deny rules take precedence
+
+A broadly scoped deny can remove access granted by many other policies. Before saving a deny policy, carefully review:
+
+- Its principal scope
+- Its selected actions
+- Whether it applies to one resource or an entire resource type
+
+### Broad policies include future resources
+
+A constraint such as:
+
+```text
+resource is Volume
+```
+
+matches all current and future volumes. Use an exact resource identifier when the grant should apply only to one object.
+
+### Group membership is evaluated at request time
+
+A group policy applies according to the user’s current group membership. Adding or removing a user from a group changes which group policies apply to that user.
+
+### Policy changes take effect immediately
+
+Saved policy changes and deletions affect subsequent authorization checks. A user who has already loaded a page may still see a control that was rendered using an earlier permission check, but the underlying operation performs authorization again.
+
+### Interface permissions are only hints
+
+The dashboard may check permissions to decide whether to display or enable a control. That check does not reserve access or guarantee that the operation will succeed. Every operation is independently authorized when it is performed.
+
+### Policy filtering is not an access explanation
+
+Filtering the policy list by a resource shows policies that target that exact resource. Broader policies—such as policies for all volumes or conditional Cedar policies—may also affect access to it.
+
+The filtered list should therefore not be interpreted as a complete explanation of why access was allowed or denied.
+
+### Managing policies requires permission
+
+Policies are themselves protected resources. A user must have the appropriate policy-management action, such as `create_policy`, `update_policy`, or `delete_policy`, for the policy’s scope.
+
+Editing a policy does not allow a user to expand their own administrative scope. If an edit moves a policy to a new resource scope, the user must also be permitted to create a policy in that new scope.
+
+### Use canonical identifiers
+
+Cedar policies should use the canonical resource identifiers shown by OuterProduct, such as:
+
+```text
+User::"users/{uuid}"
+Volume::"volumes/{uuid}"
+Run::"runs/{uuid}"
+Account::"account"
+```
+
+Display names are intended for people and may change. Canonical identifiers are the stable values used for authorization.
