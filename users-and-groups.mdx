@@ -11,13 +11,11 @@ The UI supports creating users and groups directly or syncing them from an exter
 Identity providers serve two separate purposes:
 
 - **Sign-in:** Users authenticate with their existing accounts through OpenID Connect (OIDC) or a supported OAuth provider.
-- **Directory sync:** Users, groups, and memberships are provisioned through SCIM, keeping OuterProduct aligned with your organization’s directory.
-
-These connections are configured separately. Connecting a directory does not enable sign-in automatically.
+- **Directory sync:** Users, groups, and memberships are provisioned through SCIM, which ensures that OuterProduct stays aligned with your organization’s directory.
 
 ### Configuring sign-in
 
-Sign-in providers are currently configured by an administrator in `op.toml` and become available after the OuterProduct server restarts.
+Sign-in providers are currently configured by an administrator and become available after the OuterProduct server restarts.
 
 The dashboard’s **Identity Providers** page lists configured providers and their connection details, including the redirect URI used when registering OuterProduct with the provider.
 
