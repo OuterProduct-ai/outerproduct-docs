@@ -2,9 +2,9 @@
 title: "Policies"
 ---
 
-OuterProduct uses [Cedar](https://www.cedarpolicy.com/) for policy management. Cedar is an authorization language that describes who may perform which actions on which resources. A Cedar policy answers a question like: "May a user read this volume?"
+OuterProduct uses [Cedar](https://www.cedarpolicy.com/) for policy management. Cedar is an authorization language that describes who may perform which actions on which resources. 
 
-A basic policy has three parts:
+A basic Cedar policy has three parts, such as the following policy which permits one user to read one volume:
 
 ```text
 permit (
@@ -13,8 +13,6 @@ permit (
     resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
 );
 ```
-
-This policy permits one user to read one volume.
 
 ## Key concepts
 
