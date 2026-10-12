@@ -63,28 +63,6 @@ A **policy** is a rule that either permits or forbids access. The rule contains:
 - A **resource** constraint
 - Optionally, a `when` or `unless` condition
 
-### Permit and forbid
-
-A `permit` policy grants access when all its constraints and conditions match:
-
-```text
-permit (
-    principal is User,
-    action == Action::"volume_read",
-    resource is Volume
-);
-```
-
-A `forbid` policy explicitly denies access:
-
-```text
-forbid (
-    principal is User,
-    action == Action::"secret_use",
-    resource is Secret
-);
-```
-
 A matching `forbid` overrides every matching `permit`.
 
 ### Conditions
