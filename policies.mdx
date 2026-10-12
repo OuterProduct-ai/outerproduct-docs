@@ -90,22 +90,11 @@ An `unless` condition has the inverse meaning: the policy applies unless the exp
 The visual builder is the simplest way to create a policy. It generates Cedar based on the selections you make. To create a policy, open **Policies** in the dashboard and:
 
 1. Select **New policy**.
-2. Choose the principals to which the policy applies. A policy can apply to one specific user, a selected set of users, all users, or 
-3. Choose a resource type and one or more actions.
+2. Choose the principals to which the policy applies. A policy can apply to one specific user, a selected set of users, or all users. 
+3. Choose a resource type and one or more actions. The builder offers convenient presets for Read only, Contributor, and Full access
 4. Select whether the policy allows or denies those actions.
 5. Choose one resource or all resources of that type.
 6. Review the generated Cedar and save the policy.
-
-#### Choosing principals
-
-A policy can apply to:
-
-- One specific user
-- A selected set of users
-- All users
-- Every compatible identity
-
-The summary panel shows the selected principal scope before the policy is saved.
 
 #### Choosing actions
 
