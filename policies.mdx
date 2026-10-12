@@ -125,8 +125,6 @@ Policies can also be created, updated, listed, and deleted through the Policy AP
 - A server-assigned policy identifier
 - An ETag used to protect updates from concurrent changes
 
-Create a policy by sending its Cedar statement to the Policy API:
-
 ```shellscript
 curl "$OUTERPRODUCT_API_URL/outerproduct.policy.v1alpha.PolicyService/CreatePolicy" \
   -H "Authorization: Bearer $OUTERPRODUCT_API_KEY" \
