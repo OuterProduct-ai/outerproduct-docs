@@ -127,7 +127,7 @@ In this example, each batch produces one Call to `sum_batch`, with the batch pas
 Inside a running function, `client.map()` creates child Calls in the current Run. From local code, it creates a separate Run for each input.
 
 <Note>
-  Large arrays, datasets, model weights, and other large inputs or outputs are often better stored in a [Volume](/volumes) and managed through volume mounts.
+
 </Note>
 
 ## Async usage
