@@ -105,7 +105,7 @@ When you need more control than the visual builder provides, open **Policies** i
 - Creating narrowly tailored deny rules
 - Reviewing or editing the exact policy source
 
-For example, the following policy gives members of the analytics group read access to one volume:
+For example, the following policy gives members of the  group read access to one volume:
 
 ```text
 permit (
@@ -114,33 +114,6 @@ permit (
     resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
 );
 ```
-
-Multiple actions can be included in one policy:
-
-```text
-permit (
-    principal in Group::"groups/analytics",
-    action in [
-        Action::"volume_read",
-        Action::"volume_write"
-    ],
-    resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
-);
-```
-
-A type-wide policy can cover every resource of that type:
-
-```text
-permit (
-    principal in Group::"groups/data-science",
-    action == Action::"execute_run",
-    resource is Run
-);
-```
-
-Each policy saved through the dashboard contains one Cedar statement. Create additional policies when separate rules are easier to understand or manage.
-
-When an existing policy is opened, it is shown in the Cedar editor. Switching from Cedar back to the visual builder starts a new visual policy and replaces the current Cedar draft after confirmation.
 
 ### Creating policies through the API
 
