@@ -66,19 +66,7 @@ Your Image must also contain the drivers and libraries required by your applicat
 
 ## Supported GPUs
 
-OuterProduct currently supports the following GPU types and counts:
-
-| `gpu_type` | Supported `gpu` counts |
-| :-- | --: |
-| `"T4"` | 1, 2, 4, 8 |
-| `"L4"` | 1, 2, 4, 8 |
-| `"L40S"` | 1, 2, 4, 8 |
-| `"A10G"` | 1, 2, 4 |
-| `"A100"` | 1, 2, 4, 8 |
-| `"A100-80GB"` | 1, 2, 4, 8 |
-| `"H100"` | 1 |
-
-OuterProduct supports several NVIDIA GPU types. Available GPU models and counts depend on the platform’s execution backend and current capacity, and may change over time. You can inspect the GPU types available to your account directly from the SDK:
+OuterProduct supports several NVIDIA GPU types (including L4, L40S, A10G, A100, H100, and more). Available GPU models and counts depend on the platform’s execution backend and current capacity, and may change over time. You can inspect the GPU types available to your account directly from the SDK:
 
 ```python
 gpu_types = [
