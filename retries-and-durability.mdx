@@ -80,9 +80,7 @@ run = client.run(
 
 ## Durable execution
 
-OuterProduct checkpoints work at Call boundaries. Once a Call succeeds, its result is stored as part of the Run. If a parent Call fails and is retried, it begins executing again. When it reaches a child Call that already succeeded, OuterProduct returns the stored result instead of executing that child again.
-
-For example:
+OuterProduct checkpoints work at Call boundaries. Once a Call succeeds, its result is stored as part of the Run. If a parent Call fails and is retried, it begins executing again. When it reaches a child Call that already succeeded, OuterProduct returns the stored result instead of executing that child again. For example:
 
 ```text
 Attempt 1
