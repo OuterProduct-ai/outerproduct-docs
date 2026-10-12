@@ -119,13 +119,7 @@ permit (
 
 Policies can also be created, updated, listed, and deleted through the Policy API. This is useful when policies are managed through automation or an infrastructure workflow. An API-created policy contains the same fields as a dashboard policy.
 
-The caller must have `create_policy` permission for the policy’s resource. The response includes the policy’s server-assigned name and ETag.
-
-- An optional display name
-- An optional description
-- A required Cedar statement
-- A server-assigned policy identifier
-- An ETag used to protect updates from concurrent changes
+The caller must have `create_policy` permission for the policy’s resource. 
 
 OuterProduct’s API uses Connect over HTTP. Raw HTTP requests must include `Connect-Protocol-Version: 1`.
 
@@ -142,7 +136,7 @@ curl "$OUTERPRODUCT_API_URL/outerproduct.policy.v1alpha.PolicyService/CreatePoli
   }'
 ```
 
-`displayName` and `description` are optional.
+`displayName` and `description` are optional. The response includes a server-assigned policy identifier and an ETag used to protect updates from concurrent changes
 
 ## Available actions
 
