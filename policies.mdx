@@ -36,8 +36,6 @@ Under **Policies → New policy → Visual builder**, the user chooses:
 
 The builder generates ordinary Cedar source; it does not create a separate kind of policy. The generated source can be previewed and copied.
 
-A useful warning for the docs: the presets are conveniences based on action names, not platform roles with independent semantics.
-
 ### 2. Dashboard Cedar editor
 
 Selecting the **Cedar** tab exposes the policy statement directly. This enables expressions that the visual builder cannot currently represent conveniently, such as group membership or custom `when`/`unless` conditions.
@@ -53,15 +51,6 @@ permit (
 ```
 
 Users are connected to their groups in the Cedar entity hierarchy at evaluation time, so `principal in Group::"..."` evaluates group membership. See [cedar.rs](http://cedar.rs) (crates/iam-authorizer/src/cedar.rs:38).
-
-Important editor behavior:
-
-- Existing policies open in Cedar mode.
-- Switching a Cedar draft back to the visual builder replaces the draft after confirmation; the builder does not reverse-engineer arbitrary Cedar.
-- Each saved dashboard/API policy contains one Cedar policy statement, not a multi-policy Cedar policy set.
-- Display name and description are metadata and do not affect authorization.
-
-The editor implementation is in [policies.rs](http://policies.rs) (crates/webui/src/policies.rs:240).
 
 ### 3. Operator-supplied Cedar
 
