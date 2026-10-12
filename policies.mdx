@@ -83,17 +83,6 @@ when {
 
 An `unless` condition has the inverse meaning: the policy applies unless the expression is true.
 
-### Policy schema
-
-OuterProduct maintains a Cedar **schema** that defines:
-
-- Valid principal and resource types
-- Valid actions
-- Which actions apply to which resource types
-- Attributes available on resources
-
-Every new or updated policy is validated against this schema. A policy with an unknown action, incompatible resource type, or invalid expression cannot be saved.
-
 ## Creating a policy
 
 Policies can be created in the dashboard using either the visual builder or the Cedar editor. Both create the same kind of policy and are enforced in exactly the same way.
