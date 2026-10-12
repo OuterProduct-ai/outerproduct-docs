@@ -127,7 +127,7 @@ In this example, each batch produces one Call to `sum_batch`, with the batch pas
 Inside a running function, `client.map()` creates child Calls in the current Run. From local code, it creates a separate Run for each input.
 
 <Note>
-  When called from inside a running function, `client.map()` creates child Calls within the current Run’s durability boundary. If the parent retries, completed child results are reused. From local code, each input creates a separate Run with its own retries and durability boundary. Calling [client.map](http://client.map)
+  When called from inside a running function, `client.map()` creates parallel child Calls within the current Run’s durability boundary. If the parent function retries, completed child results are reused. However, when called directly from local code, each input creates a separate Run with its own retries and durability boundary. Calling [client.map](http://client.map)
 </Note>
 
 ## Async usage
