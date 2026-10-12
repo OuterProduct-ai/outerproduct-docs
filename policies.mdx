@@ -105,11 +105,11 @@ When you need more control than the visual builder provides, open **Policies** i
 - Creating narrowly tailored deny rules
 - Reviewing or editing the exact policy source
 
-For example, the following policy gives members of the  group read access to one volume:
+For example, the following policy gives members of the sales group read access to one volume:
 
 ```text
 permit (
-    principal in Group::"groups/analytics",
+    principal in Group::"groups/sales",
     action == Action::"volume_read",
     resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
 );
