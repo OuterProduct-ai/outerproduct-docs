@@ -78,11 +78,7 @@ OuterProduct currently supports the following GPU types and counts:
 | `"A100-80GB"` | 1, 2, 4, 8 |
 | `"H100"` | 1 |
 
-OuterProduct supports several NVIDIA GPU types. Available GPU models and counts depend on the platform’s execution backend and current capacity, and may change over time.
-
-GPU names are case-sensitive. Availability may vary with current platform capacity.
-
-You can inspect the GPU types available to your account directly from the SDK:
+OuterProduct supports several NVIDIA GPU types. Available GPU models and counts depend on the platform’s execution backend and current capacity, and may change over time. You can inspect the GPU types available to your account directly from the SDK:
 
 ```python
 gpu_types = [
@@ -93,3 +89,5 @@ gpu_types = [
 
 print(gpu_types)
 ```
+
+GPU names are case-sensitive.
