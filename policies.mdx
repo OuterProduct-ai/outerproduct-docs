@@ -125,6 +125,23 @@ Policies can also be created, updated, listed, and deleted through the Policy AP
 - A server-assigned policy identifier
 - An ETag used to protect updates from concurrent changes
 
+OuterProduct’s API uses Connect over HTTP. Raw HTTP requests must include `Connect-Protocol-Version: 1`.
+
+```shellscript
+curl "$OUTERPRODUCT_API_URL/outerproduct.policy.v1alpha.PolicyService/CreatePolicy" \
+  --header "Authorization: Bearer $OUTERPRODUCT_TOKEN" \
+  --header "Connect-Protocol-Version: 1" \
+  --json '{
+    "policy": {
+      "displayName": "Analytics readers",
+      "description": "Allows the analytics group to read the reporting volume.",
+      "statement": "permit (principal in Group::\"groups/analytics\", action == Action::\"volume_read\", resource == Volume::\"volumes/VOLUME_ID\");"
+    }
+  }'
+```
+
+`displayName` and `description` are optional.
+
 ```shellscript
 curl "$OUTERPRODUCT_API_URL/outerproduct.policy.v1alpha.PolicyService/CreatePolicy" \
   -H "Authorization: Bearer $OUTERPRODUCT_API_KEY" \
