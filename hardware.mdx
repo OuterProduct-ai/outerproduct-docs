@@ -18,7 +18,7 @@ run = client.run(
 
 ## CPUs
 
-Use `cpu` to specify the number of CPUs assigned to the Call. 
+Use `cpu` to specify the number of CPUs assigned to the Call. Requested CPUs are assigned to one worker. The default is one CPU. 
 
 ```python
 run = client.run(
@@ -28,8 +28,6 @@ run = client.run(
     cpu=4,
 )
 ```
-
-The default is one CPU. The requested CPUs are assigned to one worker.
 
 ## Memory
 
