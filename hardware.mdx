@@ -42,7 +42,7 @@ run = client.run(
 )
 ```
 
-Memory is specified in bytes. The limit includes memory used by `/dev/shm`. If `memory_bytes` is omitted, OuterProduct uses the platform’s default allocation for the requested CPU count.
+Memory is specified in bytes. The limit includes temporary shared memory (used by `/dev/shm`). If `memory_bytes` is omitted, OuterProduct uses the platform’s default allocation for the requested CPU count.
 
 ## GPUs
 
