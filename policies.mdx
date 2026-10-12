@@ -1,3 +1,137 @@
 ---
 title: "Policies"
 ---
+
+OuterProduct uses Cedar for platform authorization. The most useful framing for the documentation is:
+
+> A policy answers: “May this principal perform this action on this resource?”
+
+For example:
+
+```text
+permit (
+    principal == User::"users/01234567-89ab-cdef-0123-456789abcdef",
+    action in [Action::"volume_read", Action::"volume_write"],
+    resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
+);
+```
+
+## Ways to define policies
+
+There are three related—but operationally different—paths.
+
+### 1. Dashboard visual builder
+
+Under **Policies → New policy → Visual builder**, the user chooses:
+
+- Principals: one user, selected users, all users, or everyone
+- Actions: actions applicable to a selected resource type
+- A preset:
+  - **Read only** selects names matching `get_*`, `list_*`, `read_*`, `*_read`, `*_browse`, or `*_select`
+  - **Contributor** adds actions matching `use_*`, `execute_*`, `*_use`, and `*_write`
+  - **Full access** selects every applicable action
+  - Individual actions can also be selected
+- Effect: **Allow** or **Deny**
+- Resources: one resource or every resource of that type
+
+The builder generates ordinary Cedar source; it does not create a separate kind of policy. The generated source can be previewed and copied. See [builder.rs](http://builder.rs) (crates/webui/src/policies/builder.rs:18).
+
+A useful warning for the docs: the presets are conveniences based on action names, not platform roles with independent semantics.
+
+### 2. Dashboard Cedar editor
+
+Selecting the **Cedar** tab exposes the policy statement directly. This enables expressions that the visual builder cannot currently represent conveniently, such as group membership or custom `when`/`unless` conditions.
+
+For example, granting a group read access:
+
+```text
+permit (
+    principal in Group::"groups/analytics",
+    action == Action::"volume_read",
+    resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
+);
+```
+
+Users are connected to their groups in the Cedar entity hierarchy at evaluation time, so `principal in Group::"..."` evaluates group membership. See [cedar.rs](http://cedar.rs) (crates/iam-authorizer/src/cedar.rs:38).
+
+Important editor behavior:
+
+- Existing policies open in Cedar mode.
+- Switching a Cedar draft back to the visual builder replaces the draft after confirmation; the builder does not reverse-engineer arbitrary Cedar.
+- Each saved dashboard/API policy contains one Cedar policy statement, not a multi-policy Cedar policy set.
+- Display name and description are metadata and do not affect authorization.
+
+The editor implementation is in [policies.rs](http://policies.rs) (crates/webui/src/policies.rs:240).
+
+### 3. Operator-supplied Cedar
+
+Deployments can load a Cedar policy set at control-plane startup:
+
+```text
+[control_plane.authorizer.policy]
+kind = "file"
+path = "/etc/outerproduct/operators.cedar"
+```
+
+Or inline:
+
+```text
+[control_plane.authorizer.policy]
+kind = "inline"
+contents = """
+permit (
+    principal in Group::"groups/platform-admins",
+    action,
+    resource
+);
+"""
+```
+
+These policies form the operator-controlled authorization baseline. They are especially important for bootstrapping administrators who can subsequently create dashboard policies.
+
+Operator policies differ from dashboard policies:
+
+- They may contain a full Cedar policy set.
+- They are loaded at startup, not reread for every request.
+- A missing, unreadable, or invalid file prevents startup.
+- OCI is represented in configuration but currently rejected at runtime.
+- The default `kind = "allow_all"` name is misleading: it supplies an empty operator policy set, not a blanket permit. Built-in and stored policies still determine access.
+
+Configuration types are defined in iam-authorizer-config (crates/iam-authorizer-config/src/lib.rs:23).
+
+## How a decision is made
+
+For an operation, the server constructs a Cedar request containing:
+
+```text
+authenticated user + requested action + authoritative resource entity
+```
+
+The effective policy set consists of:
+
+1. Built-in platform policies
+2. Operator policies loaded from configuration
+3. Policies created through the dashboard or Policy API
+
+Cedar then applies these rules:
+
+- At least one matching `permit` is required.
+- A matching `forbid` overrides every matching `permit`.
+- If no `permit` matches, access is denied.
+- Policies have no evaluation order or “first match wins” behavior.
+- Evaluation errors do not grant access.
+
+The request context is currently empty. Identity, group membership, ownership, and other resource facts come from trusted server-side records, not from fields supplied by the caller. The central evaluation path is in [cedar.rs](http://cedar.rs) (crates/iam-authorizer/src/cedar.rs:68).
+
+Dashboard-created policies are loaded without an authorization cache, so successful edits and revocations affect the next authorization check.
+
+## Built-in behavior
+
+OuterProduct always includes several non-editable policies:
+
+- Users may create runs, volumes, file trees, and secrets.
+- Users may read/update themselves and manage their own API keys.
+- A resource’s creator is permitted to perform actions applicable to that resource.
+- A user may not execute a run created by somebody else, even if another policy grants execution.
+
+The final point is an example of `forbid` overriding `permit`. The built-ins are assembled in [model.rs](http://model.rs) (crates/iam-authorizer/src/model.rs:36), with their source under policy/ (policy).
