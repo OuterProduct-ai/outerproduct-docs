@@ -80,7 +80,9 @@ run = client.run(
 
 ## Durable execution
 
-OuterProduct checkpoints work at Call boundaries. Once a Call succeeds, its result is stored as part of the Run. If a parent Call fails and is retried, it begins executing again. When it reaches a child Call that already succeeded, OuterProduct returns the stored result instead of executing that child again. For example:
+OuterProduct checkpoints work at Call boundaries. Once a Call succeeds, its result is stored as part of the Run. If a parent Call fails and is retried, it begins executing again. When it reaches a child Call that already succeeded, OuterProduct returns the stored result instead of executing that child again. 
+
+A long workflow can therefore recover from a failure without repeating all of its successful work. For example:
 
 ```text
 Attempt 1
@@ -93,8 +95,6 @@ Attempt 2
 ├── train_model    ↪ reuse result
 └── publish_model  ✓ completed
 ```
-
-A long workflow can therefore recover from a failure without repeating all of its successful work.
 
 However, if a Call fails halfway through its function, its next Attempt starts that function again from the beginning. Split expensive or important stages into separate Calls when you want them checkpointed independently.
 
