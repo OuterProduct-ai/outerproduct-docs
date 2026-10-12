@@ -144,16 +144,52 @@ The response includes a server-assigned policy identifier and an ETag used to pr
 
 The current policy model includes the following major resource-specific actions.
 
-| Resource | Actions |
-| :-- | :-- |
-| Account | Account administration and creation or listing of top-level resources |
-| User | `get_user`, `update_user`, `disable_user`, and API-key actions |
-| Group | `get_group`, `update_group`, `delete_group` |
-| Policy | `get_policy`, `list_policies`, `create_policy`, `update_policy`, `delete_policy` |
-| Volume | `volume_read`, `volume_write`, `volume_manage` |
-| Secret | `secret_read`, `secret_manage`, `secret_use` |
-| File tree | `read_file_tree`, `use_file_tree`, `delete_file_tree` |
-| Run | `read_run`, `execute_run`, `cancel_run`, `delete_run` |
+<table>
+  <colgroup>
+    <col width="100" />
+    <col width="616" />
+  </colgroup>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Account</td>
+      <td>Account administration and creation or listing of top-level resources</td>
+    </tr>
+    <tr>
+      <td>User</td>
+      <td>`get_user`, `update_user`, `disable_user`, and API-key actions</td>
+    </tr>
+    <tr>
+      <td>Group</td>
+      <td>`get_group`, `update_group`, `delete_group`</td>
+    </tr>
+    <tr>
+      <td>Policy</td>
+      <td>`get_policy`, `list_policies`, `create_policy`, `update_policy`, `delete_policy`</td>
+    </tr>
+    <tr>
+      <td>Volume</td>
+      <td>`volume_read`, `volume_write`, `volume_manage`</td>
+    </tr>
+    <tr>
+      <td>Secret</td>
+      <td>`secret_read`, `secret_manage`, `secret_use`</td>
+    </tr>
+    <tr>
+      <td>File tree</td>
+      <td>`read_file_tree`, `use_file_tree`, `delete_file_tree`</td>
+    </tr>
+    <tr>
+      <td>Run</td>
+      <td>`read_run`, `execute_run`, `cancel_run`, `delete_run`</td>
+    </tr>
+  </tbody>
+</table>
 
 The dashboard shows the exact actions available for the selected resource type.
 
