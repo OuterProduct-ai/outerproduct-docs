@@ -92,7 +92,7 @@ print(run.wait())  # 21
 
 This creates one Run with three Calls: the root Call to `sum_batches` and two child Calls to `sum_batch`. Both children are submitted before the parent calls `.wait()`.
 
-Each child Call is configured separately, with its own image, compute resources, environment variables, volume mounts, and retry settings.
+Each child Call can be configured separately, with its own image, compute resources, environment variables, volume mounts, and retry settings.
 
 When the parent function exits, OuterProduct requests cancellation of any unfinished child Calls. In this example, the parent waits for both children before returning its result.
 
