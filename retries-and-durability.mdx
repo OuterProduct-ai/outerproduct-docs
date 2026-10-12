@@ -76,30 +76,7 @@ run = client.run(
 )
 ```
 
-`max_attempts` includes the first Attempt. In this example, OuterProduct can try the Call up to three times. If no retry strategy is provided, the Call receives one Attempt and is not retried automatically.
-
-Each Call defines its own retry strategy. A parent and its children can therefore use different limits:
-
-```python
-def pipeline(client, training_data):
-    return client.run(
-        fn=train_model,
-        args=(training_data,),
-        image=training_image,
-        gpu_type="L4",
-        retry_strategy=op.RetryStrategy(max_attempts=3),
-    ).wait()
-
-
-run = client.run(
-    fn=pipeline,
-    args=(training_data,),
-    image=workflow_image,
-    retry_strategy=op.RetryStrategy(max_attempts=2),
-)
-```
-
-Application failures and infrastructure failures both consume the Call’s Attempt budget. Cancellation is never retried.
+`max_attempts` includes the first Attempt. In this example, OuterProduct can try the Call up to three times. If no retry strategy is provided, the Call receives one Attempt and is not retried automatically. Each Call defines its own retry strategy; a parent and its children can therefore use different limits.
 
 ## Durable execution
 
