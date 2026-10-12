@@ -10,7 +10,7 @@ run = client.run(
     args=(training_data,),
     image=training_image,
     cpu=8,
-    memory_bytes=32 * 1024**3,
+    memory_bytes=32 * 1024**3, # 32 GiB
     gpu=1,
     gpu_type="A100-80GB",
 )
