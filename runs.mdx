@@ -109,7 +109,7 @@ def sum_batches(client, batches):
         batches,
         image=image,
     )
-    # results contains [6, 15, 24] for the batches below.
+    # results yields 6, 15, 24 for the batches below.
     return sum(results)
 
 
