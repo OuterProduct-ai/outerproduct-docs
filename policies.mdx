@@ -199,47 +199,9 @@ OuterProduct includes built-in policies for common ownership and self-service be
 - Create common resources such as volumes, secrets, file trees, and runs
 - Access resources they created
 
-Ownership is determined from trusted resource metadata maintained by OuterProduct. A caller cannot claim ownership by supplying a `created_by` value.
-
 Built-in policies are evaluated alongside policies created in the dashboard. They cannot be viewed or edited as ordinary dashboard policies.
 
 ## Advanced considerations
-
-### Policies are additive
-
-Creating a new policy does not replace an existing policy. All applicable policies participate in the decision.
-
-Splitting access into several small policies is often easier to understand than creating one large policy. For example, read access and management access can be granted separately.
-
-### Deny rules take precedence
-
-A broadly scoped deny can remove access granted by many other policies. Before saving a deny policy, carefully review:
-
-- Its principal scope
-- Its selected actions
-- Whether it applies to one resource or an entire resource type
-
-### Broad policies include future resources
-
-A constraint such as:
-
-```text
-resource is Volume
-```
-
-matches all current and future volumes. Use an exact resource identifier when the grant should apply only to one object.
-
-### Group membership is evaluated at request time
-
-A group policy applies according to the user’s current group membership. Adding or removing a user from a group changes which group policies apply to that user.
-
-### Policy changes take effect immediately
-
-Saved policy changes and deletions affect subsequent authorization checks. A user who has already loaded a page may still see a control that was rendered using an earlier permission check, but the underlying operation performs authorization again.
-
-### Interface permissions are only hints
-
-The dashboard may check permissions to decide whether to display or enable a control. That check does not reserve access or guarantee that the operation will succeed. Every operation is independently authorized when it is performed.
 
 ### Policy filtering is not an access explanation
 
