@@ -42,7 +42,13 @@ OuterProduct supplies the function’s `client` argument automatically. The rema
 
 ## Arguments and results
 
-When creating a Call, pass `client.run()` the function and its arguments, along with the settings that control its execution:
+When creating a Call, pass `client.run()` the function and its arguments, along with the settings that control its execution.
+
+OuterProduct mounts the source containing each function and imports the function by name. Arguments and return values are serialized using `cloudpickle` and can be any Python objects it supports.
+
+<Note>
+  Large arrays, datasets, model weights, and other large inputs or outputs are often better stored in a [Volume](/volumes) and managed through volume mounts.
+</Note>
 
 ```python
 import outerproduct_sdk as op
@@ -79,9 +85,3 @@ Each argument to `client.run()` controls one part of the execution:
 - **Environment variables (**`env_vars`**):** Configuration injected into the container. Values can be plain strings or securely stored OuterProduct secrets.
 - **Volumes (**`volumes`**):** Persistent storage mounted inside the container. Each entry maps a container path, such as `/data`, to an OuterProduct Volume.
 - **Retry strategy (**`retry_strategy`**):** Controls how OuterProduct responds when an attempt fails. For example, `max_attempts=3` allows a Call to be attempted up to three times.
-
-OuterProduct mounts the source containing each function and imports the function by name. Arguments and return values are serialized using `cloudpickle` and can be any Python objects it supports.
-
-<Note>
-  Large arrays, datasets, model weights, and other large inputs or outputs are often better stored in a [Volume](/volumes) and managed through volume mounts.
-</Note>
