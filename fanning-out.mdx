@@ -4,9 +4,9 @@ title: "Call fanouts"
 
 A common pattern in a Run is to apply the same function independently to many inputs. You could do this by invoking `client.run()` once for each input, but `client.map()` provides a concise way to express this fanout.
 
-`client.map()` creates one Call per input and executes them concurrently using the same execution settings. It returns an iterator that yields results in input order, so you can consume the results directly without calling `.wait()` on each Call handle.
+`client.map()` creates one Call per input and executes them concurrently using the same execution settings. It returns an iterator that yields results in input order, so you can consume the results directly without calling `.wait()` on each Call handle (unlike `client.run()`).
 
-`client.map()` applies a function to a collection of inputs concurrently and returns an iterator that yields results in input order. Unlike `client.run()`, it returns results directly, so no additional `.wait()` is needed.
+When used within a Run, as in the example below, these invocations become child Calls in that Run. When used outside a Run, each invocation creates a separate Run.
 
 It can replace repeated `client.run()` calls when each input needs the same processing.
 
