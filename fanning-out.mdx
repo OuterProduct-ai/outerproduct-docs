@@ -2,8 +2,6 @@
 title: "Call fanouts"
 ---
 
-## Mapping over inputs
-
 `client.map()` applies a function to a collection of inputs concurrently and returns an iterator that yields results in input order. Unlike `client.run()`, it returns results directly, so no additional `.wait()` is needed.
 
 It can replace repeated `client.run()` calls when each input needs the same processing.
