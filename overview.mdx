@@ -78,6 +78,8 @@ run = client.run(
 result = run.wait()
 ```
 
+These arguments are explored in more details in dedicated sections of the docs:
+
 - **Function (**`fn`**):** The Python function to execute. It may be synchronous or asynchronous and must accept an OuterProduct client as its first argument.
 - **Arguments (**`args `**and** `kwargs`**):** The values passed to the function after its client argument. Arguments must be serializable.
 - **Image (**`image`**):** The container environment in which the function runs. The image defines the operating system, Python runtime, and installed dependencies.
