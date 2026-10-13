@@ -50,6 +50,8 @@ OuterProduct mounts the source containing each function and imports the function
   Large arrays, datasets, model weights, and other large inputs or outputs are often better stored in a [Volume](/volumes) and managed through volume mounts.
 </Note>
 
+Each argument to `client.run()` controls one part of the execution:
+
 ```python
 import outerproduct_sdk as op
 
@@ -75,8 +77,6 @@ run = client.run(
 
 result = run.wait()
 ```
-
-Each argument to `client.run()` controls one part of the execution:
 
 - **Function (**`fn`**):** The Python function to execute. It may be synchronous or asynchronous and must accept an OuterProduct client as its first argument.
 - **Arguments (**`args `**and** `kwargs`**):** The values passed to the function after its client argument. Arguments must be serializable.
