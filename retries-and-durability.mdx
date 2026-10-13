@@ -16,7 +16,8 @@ image = op.Image.from_registry("python:3.12-slim")
 
 
 def prepare_data(_client, records):
-    return [record.strip() for record in records]
+	# ...
+    return prepared_records
 
 
 def train_model(_client, records):
