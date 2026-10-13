@@ -44,8 +44,6 @@ OuterProduct supplies the function’s `client` argument automatically. The rema
 
 `client.run()` accepts several execution settings for the a Call:
 
-Calling `client.run()` returns immediately with a handle to the Run. Call `.wait()` when you need its result.
-
 ```python
 import outerproduct_sdk as op
 
@@ -83,3 +81,7 @@ Each argument to `client.run()` controls one part of the execution:
 - **Retry strategy (**`retry_strategy`**):** Controls how OuterProduct responds when an attempt fails. For example, `max_attempts=3` allows a Call to be attempted up to three times.
 
 The following pages cover each of these options in more detail.
+
+## Results
+
+Calling `client.run()` returns immediately with a handle to the Run. Call `.wait()` when you need its result.

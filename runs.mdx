@@ -2,13 +2,6 @@
 title: "Runs"
 ---
 
-In addition to the function, arguments, and image, `client.run()` accepts various execution settings for the root Call:
-
-- [Hardware](/hardware) resources, including CPU and GPU requirements.
-- [Environment Variables](/env-vars) for the execution runtime.
-- [Volumes](/volumes) to mount in the remote container's filesystem.
-- [Retry settings](/retries-and-durability) for the root Call. 
-
 ### Arguments and results
 
 OuterProduct mounts the source containing each function and imports the function by name. Arguments and return values are serialized using `cloudpickle` and can be any Python objects it supports.
