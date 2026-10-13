@@ -38,14 +38,15 @@
         "group": "Execution",
         "pages": [
           "overview",
+          "runs",
           "images",
           "hardware",
           "env-vars",
           "volumes",
-          "runs",
           "multi",
           "fanning-out",
-          "retries-and-durability"
+          "retries-and-durability",
+          "async-usage"
         ]
       },
       {

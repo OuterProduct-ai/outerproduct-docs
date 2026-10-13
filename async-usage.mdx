@@ -1,0 +1,26 @@
+---
+title: "Async usage"
+---
+
+The `.aio()` interface allows SDK operations to be awaited without blocking the calling event loop.
+
+```python
+import asyncio
+
+
+async def main():
+    run = await client.run.aio(
+        fn=sum_batch,
+        args=([1, 2, 3],),
+        image=image,
+    )
+    result = await run.wait.aio()
+    print(result)  # 6
+
+
+asyncio.run(main())
+```
+
+`await client.run.aio()` returns a handle after submission. `await run.wait.aio()` waits for the result.
+
+Functions executed by OuterProduct can also use `async def`. Inside an async function, `client.run.aio()`, `call.wait.aio()`, and `client.map.aio()` provide awaitable versions of the same operations. 
