@@ -2,6 +2,8 @@
 title: "Nested calls"
 ---
 
+Calling `client.run()` outside an existing Run creates a new Run containing a single root Call. More complex Runs can contain nested Calls, each with its own function, arguments, and computational requirements.
+
 In the example above, we created a Run to execute a single function remotely using `client.run()`. This Run only consisted of a single function Call. More complex Runs often involve several nested Calls, each with possibly distinct computational requirements.
 
 To create a nested call, simply call `client.run()` inside a function that is part of a Run. When invoked inside a function, `client.run()` creates a child Call in the current Run and returns a `Call` handle. The parent can submit multiple child Calls before waiting for their results, allowing the children to execute concurrently.
