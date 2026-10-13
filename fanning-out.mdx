@@ -31,7 +31,7 @@ print(run.wait())  # 45
 When used within a Run, as in the example below, these invocations become child Calls in that Run. When used outside a Run, each input creates a separate Run.
 
 <Note>
-  When called from inside a running function, `client.map()` creates parallel child Calls within the current Run. So, if the parent function retries, completed child results are reused. See [Retries & Durability](/retries-and-durability) for more on how retries behave within a single Run.
+  When used within a Run, `client.map()` creates parallel child Calls. So, if the parent function retries, completed child results are reused. See [Retries & Durability](/retries-and-durability) for more on how retries behave within a single Run.
 
   However, when `client.map()` is called directly from local code, each input creates a separate Run with its own retries and durability boundary. So, calling `client.map()` again from local code starts new Runs for every input, including inputs that previously completed successfully. 
 </Note>
