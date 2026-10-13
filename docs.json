@@ -44,7 +44,8 @@
           "volumes",
           "runs",
           "fanning-out",
-          "retries-and-durability"
+          "retries-and-durability",
+          "sequential"
         ]
       },
       {
