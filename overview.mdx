@@ -2,7 +2,7 @@
 title: "Overview"
 ---
 
-A Run is a remote execution of your code on OuterProduct. It starts with a single function call and can include additional child function calls launched from within it. Each call can have its own image, compute resources, and configuration.
+A Run is a remote execution of your code on OuterProduct. It starts with a single function call and can include additional child function calls launched from within it. Each call packages its function and arguments with the software dependencies, hardware, environment, and durability settings required to run it.
 
 ## Runs, Calls, and Attempts
 
@@ -16,7 +16,7 @@ A Run can contain many Calls, and each Call can have multiple Attempts. The UI s
 
 See [Retries and durability](/retries-and-durability) for retry configuration and behavior.
 
-`client.run()` submits a Python function for asynchronous execution with OuterProduct. It packages the function and its arguments with the software dependencies, hardware, environment, and durability settings required to run it.
+`client.run()` submits a Python function for asynchronous execution with OuterProduct. It 
 
 Calling `client.run()` returns immediately with a handle to the Run. Call `.wait()` when you need its result.
 
