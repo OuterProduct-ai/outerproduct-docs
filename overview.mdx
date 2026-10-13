@@ -82,8 +82,6 @@ Each argument to `client.run()` controls one part of the execution:
 
 The following pages cover each of these options in more detail.
 
-Calling `client.run()` returns immediately with a handle to the Run. Call `.wait()` when you need its result.
-
 OuterProduct mounts the source containing each function and imports the function by name. Arguments and return values are serialized using `cloudpickle` and can be any Python objects it supports.
 
 <Note>
