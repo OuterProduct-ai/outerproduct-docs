@@ -2,32 +2,6 @@
 title: "Runs"
 ---
 
-## Running a function
-
-To create a Run in OuterProduct, write a Python function that takes an OuterProduct  `client`  as its first parameter. Then, submit your function using `client.run()`, specifying the function to run, along with its arguments and compute requirements. 
-
-```python
-import outerproduct_sdk as op
-
-def sum_batch(client, values):
-    return sum(values)
-
-client = op.init()
-image = op.Image.from_registry("python:3.13-slim")
-
-run = client.run(
-    fn=sum_batch,
-    args=([1, 2, 3],),
-    image=image,
-)
-
-print(run.wait())  # 6
-```
-
-OuterProduct supplies the function’s `client` argument automatically. The remaining positional arguments can be supplied through the `args` parameter, and named arguments can be supplied through `kwargs`.
-
-`client.run()` returns a handle to the Run after submission, without waiting for execution to complete. Calling `.wait()` blocks until the Run completes and returns the function’s result. 
-
 In addition to the function, arguments, and image, `client.run()` accepts various execution settings for the root Call:
 
 - [Hardware](/hardware) resources, including CPU and GPU requirements.
