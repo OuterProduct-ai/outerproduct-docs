@@ -16,8 +16,6 @@ A Run can contain many Calls, and each Call can have multiple Attempts. The UI s
 
 See [Retries and durability](/retries-and-durability) for retry configuration and behavior.
 
-`client.run()` submits a Python function for asynchronous execution with OuterProduct. It 
-
 Calling `client.run()` returns immediately with a handle to the Run. Call `.wait()` when you need its result.
 
 ```python
