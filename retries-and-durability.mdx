@@ -1,5 +1,5 @@
 ---
-title: "Retries & Durability"
+title: "Retries and durability"
 ---
 
 OuterProduct applications form a computation graph. Each function invocation is a **Call**. The top-level `client.run()` creates a new Run and its root Call. Inside that function, the scoped client creates child Calls within the same Run.
