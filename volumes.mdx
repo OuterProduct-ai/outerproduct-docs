@@ -1,0 +1,140 @@
+---
+title: "Volumes"
+---
+
+Volumes provide access to object storage through OuterProduct. They store datasets, model weights, and outputs that persist across runs. Their contents can be accessed through the SDK or mounted as files in a function’s runtime environment.
+
+## Creating a volume
+
+`client.create_volume()` creates a volume and returns a `VolumeHandle`. OuterProduct manages the underlying object storage by default.
+
+```python
+import outerproduct_sdk as op
+
+client = op.init()
+volume_handle = client.create_volume("datasets")
+```
+
+`client.get_volume()` returns a handle to an existing volume:
+
+```python
+volume_handle = client.get_volume("datasets")
+```
+
+TODO: getting volumes by display name vs resource name 
+
+## Reading and writing data
+
+`VolumeHandle` provides methods for reading and writing objects through [obstore](https://developmentseed.org/obstore/).
+
+```python
+from pathlib import Path
+
+volume_handle.put("training.csv", Path("training.csv"))
+
+result = volume_handle.get("training.csv")
+Path("downloaded.csv").write_bytes(bytes(result.bytes()))
+```
+
+`put()` accepts bytes, local files, and streams. `get()` returns a result whose contents can be read into memory with `.bytes()` or consumed as a stream. When using these methods, object paths should be specified relative to the volume's root.
+
+The handle also supports other [standard methods](https://developmentseed.org/obstore/latest/getting-started/#configuration) for interacting with an object store, including listing objects, inspecting metadata, copying, renaming, and deleting data.
+
+```python
+listing = volume_handle.list_with_delimiter()
+metadata = volume_handle.head("training.csv")
+
+volume_handle.copy("training.csv", "archive/training.csv")
+```
+
+## Mounting a volume
+
+The `volumes` argument to `client.run()` is a dictionary mapping filesystem paths to volume handles. At runtime, the volume’s contents are mounted at the specified path:
+
+```python
+def count_rows(client):
+    import csv
+
+    with open("/data/training.csv") as file:
+        return sum(1 for _ in csv.DictReader(file))
+
+
+result = client.run(
+    fn=count_rows,
+    image=image,
+    volumes={"/data": volume_handle},  # count_rows can access the volume at /data
+)
+
+print(result.wait())
+```
+
+Volume mounts are _not_ inherited by child calls, so each child call must declare its own mounts.
+
+Mounting requires both read and write access to the volume. See [Policies](/policies) for more information on permissions in OuterProduct. 
+
+Mounted volumes support reading files and sequential writes to new files. They do not support in-place edits, appending, or atomic renames.
+
+## Registering an external object store
+
+OuterProduct Volumes can also be created from existing S3 buckets, Google Cloud Storage buckets, and Azure Blob Storage containers without copying their contents. 
+
+To connect to an external store, cloud credentials should first be stored as OuterProduct [Secrets](/secrets).
+
+<Tabs>
+  <Tab title="Amazon S3">
+    An S3 volume specifies a bucket and a stored AWS credential:
+
+    ```python
+    credential = client.get_secret("aws-storage")
+    
+    volume_handle = client.create_volume(
+        "external-datasets",
+        provider=op.VolumeProvider.S3(
+            bucket="my-bucket",
+            prefix="datasets/",
+            region="us-east-1",
+            credential=credential.name,
+        ),
+    )
+    ```
+
+    With this prefix, `training.csv` in the volume corresponds to `s3://my-bucket/datasets/training.csv`. If no prefix is specified, paths will be relative to the bucket’s root.
+  </Tab>
+  <Tab title="Google Cloud Storage">
+    A Google Cloud Storage volume specifies a bucket and a stored GCP credential:
+
+    ```python
+    credential = client.get_secret("gcp-storage")
+    
+    volume_handle = client.create_volume(
+        "external-datasets",
+        provider=op.VolumeProvider.Gcs(
+            bucket="my-bucket",
+            prefix="datasets/",
+            credential=credential.name,
+        ),
+    )
+    ```
+
+    With this prefix, `training.csv` in the volume corresponds to `gs://my-bucket/datasets/training.csv`. If no prefix is specified, paths will be relative to the bucket’s root.
+  </Tab>
+  <Tab title="Azure Blob Storage">
+    An Azure Blob Storage volume specifies a storage account, a container, and a stored Azure credential:
+
+    ```python
+    credential = client.get_secret("azure-storage")
+    
+    volume_handle = client.create_volume(
+        "external-datasets",
+        provider=op.VolumeProvider.Azure(
+            account="mystorageaccount",
+            container="my-container",
+            prefix="datasets/",
+            credential=credential.name,
+        ),
+    )
+    ```
+
+    With this prefix, `training.csv` in the volume corresponds to the blob `datasets/training.csv` in `my-container`. If no prefix is specified, paths will be relative to the container’s root.
+  </Tab>
+</Tabs>

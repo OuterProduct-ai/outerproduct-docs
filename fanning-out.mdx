@@ -1,0 +1,35 @@
+---
+title: "Call fanouts"
+---
+
+A common pattern in a Run is to apply the same function independently to many inputs. You could do this by invoking `client.run()` once for each input, but `client.map()` provides a concise way to express this fanout.
+
+`client.map()` creates one Call per input and executes them concurrently using the same execution settings. It returns an iterator that yields results in input order, so you can consume the results directly without calling `.wait()` on each Call handle (unlike `client.run()`).
+
+In the example below, each batch produces one Call to `sum_batch`, with the batch passed as its `values` argument. Here, the Run contains one root Call and three child Calls.
+
+```python
+def sum_batches(client, batches):
+    results = client.map(
+        sum_batch,
+        batches,
+        image=image,
+    )
+    # results yields 6, 15, 24 for the batches below.
+    return sum(results)
+
+
+run = client.run(
+    fn=sum_batches,
+    args=([[1, 2, 3], [4, 5, 6], [7, 8, 9]],),
+    image=image,
+)
+
+print(run.wait())  # 45
+```
+
+<Note>
+  When used within a Run, `client.map()` creates parallel child Calls. So, if the parent function retries, completed child results are reused. See [Retries & Durability](/retries-and-durability) for more on how retries behave within a single Run.
+
+  However, when `client.map()` is used outside a Run, each input creates a separate Run with its own retries and durability boundary. So, calling `client.map()` again from local code starts new Runs for every input, including inputs that previously completed successfully. 
+</Note>

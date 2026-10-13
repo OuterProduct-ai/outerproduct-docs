@@ -1,0 +1,38 @@
+---
+title: "Nested calls"
+---
+
+Calling `client.run()` outside an existing Run creates a new Run containing a single root Call. More complex Runs can contain nested Calls, each with its own function, arguments, and computational requirements. Nested Calls are useful for multistep workflows (e.g., pipelines whose stages require different compute resources), parallel processing, and more.
+
+To create a nested call, simply call `client.run()` inside a function that is part of a Run. When invoked inside a function, `client.run()` creates a child Call in the current Run and returns a `Call` handle. The parent can submit multiple child Calls before waiting for their results, allowing the children to execute concurrently.
+
+For example, a parent function can sum two batches independently and combine their results:
+
+```python
+def sum_batches(client, first_batch, second_batch):
+    first = client.run(
+        fn=sum_batch,
+        args=(first_batch,),
+        image=image,
+    )
+    second = client.run(
+        fn=sum_batch,
+        args=(second_batch,),
+        image=image,
+    )
+
+    return first.wait() + second.wait()
+
+
+run = client.run(
+    fn=sum_batches,
+    args=([1, 2, 3], [4, 5, 6]),
+    image=image,
+)
+
+print(run.wait())  # 21
+```
+
+This creates one Run with three Calls: the root Call to `sum_batches` and two child Calls to `sum_batch`. Both children are submitted before the parent calls `.wait()`.
+
+Each child Call can be configured separately, with its own image, compute resources, environment variables, volume mounts, and retry settings.

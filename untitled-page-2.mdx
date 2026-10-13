@@ -1,0 +1,81 @@
+---
+title: "Quickstart"
+---
+
+Using OuterProduct requires an account provided through your organization. If you need help getting set up, you can ask a coding agent:
+
+```text wrap
+Read https://outerproduct.com/docs/guide/getting-started.md and walk me through OuterProduct setup
+```
+
+<Steps>
+  <Step title="Create an API key">
+    Create an API key from the OuterProduct dashboard, then add it to your environment:
+
+    ```shellscript
+    export OUTERPRODUCT_API_KEY="your-api-key"
+    ```
+  </Step>
+  <Step title="Install the SDK from PyPI">
+    <CodeGroup>
+
+    ```shellscript uv
+    uv add outerproduct-sdk
+    ```
+
+    ```shellscript pip
+    pip install outerproduct-sdk
+    ```
+
+    </CodeGroup>
+  </Step>
+  <Step title="Create an OuterProduct client">
+    Import the SDK and initialize an authenticated client. `op.init()` reads your API key from the `OUTERPRODUCT_API_KEY` environment variable.
+
+    ```python
+    import outerproduct_sdk as op
+    
+    client = op.init()
+    ```
+  </Step>
+  <Step title="Run your first function">
+    Create a file named `quickstart.py`:
+
+    ```python
+    import outerproduct_sdk as op
+    
+    
+    def add(_client, a, b):
+        return a + b
+    
+    
+    client = op.init()
+    
+    run = client.run(
+        fn=add,
+        args=(20, 22),
+        image=op.Image.from_registry("python:3.12-slim"),
+    )
+    
+    print(run.wait())
+    ```
+
+    Run it locally:
+
+    ```shellscript
+    python quickstart.py
+    ```
+
+    OuterProduct executes `add` in the cloud and returns:
+
+    ```shellscript
+    42
+    ```
+
+    You can also ask a coding agent to create an example for you:
+
+    ```text wrap
+    Write me a simple Python script that demonstrates the power of the OuterProduct platform.
+    ```
+  </Step>
+</Steps>

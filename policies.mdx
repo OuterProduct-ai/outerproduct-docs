@@ -1,0 +1,191 @@
+---
+title: "Policies"
+---
+
+OuterProduct uses [Cedar](https://www.cedarpolicy.com/) for policy management. Cedar is an authorization language that describes who may perform which actions on which resources. A basic Cedar policy has three parts, such as the following policy which permits one user to read one volume: 
+
+```text
+permit (
+    principal == User::"users/01234567-89ab-cdef-0123-456789abcdef",
+    action == Action::"volume_read",
+    resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
+);
+```
+
+## Key concepts
+
+### Principal
+
+The **principal** is the identity attempting an action, typically the canonical identifier for the authenticated OuterProduct user making the request:
+
+```text
+principal == User::"users/01234567-89ab-cdef-0123-456789abcdef"
+```
+
+A policy can grant access to users through group membership:
+
+```text
+principal in Group::"groups/analytics"
+```
+
+### Action
+
+An **action** is the operation the principal wants to perform. Examples include `Action::"volume_read"` , `Action::"volume_write"` , `Action::"secret_use"` , etc.
+
+Actions are specific to a resource type. For example, `volume_write` applies to volumes, while `execute_run` applies to runs.
+
+### Resource
+
+The **resource** is the object on which the action is attempted, such as a volume, secret, run, user, or group. Resources use typed canonical identifiers:
+
+```text
+Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
+Secret::"secrets/01234567-89ab-cdef-0123-456789abcdef"
+```
+
+### Policy
+
+A **policy** is a rule that either permits or forbids access. The rule contains:
+
+- An **effect**: `permit` (to grant access) or `forbid` (to deny access)
+- A **principal** constraint
+- An **action** constraint
+- A **resource** constraint
+- Optionally, a `when` or `unless` condition
+
+A matching `forbid` overrides every matching `permit`.
+
+### Conditions
+
+A policy can use a `when` condition to apply only when an additional expression is true:
+
+```text
+permit (
+    principal is User,
+    action == Action::"volume_read",
+    resource is Volume
+)
+when {
+    resource has created_by &&
+    resource.created_by == principal
+};
+```
+
+An `unless` condition has the inverse meaning: the policy applies unless the expression is true.
+
+## Creating a policy
+
+<Warning>
+  Policies are themselves protected resources. A user must have the appropriate policy-management action, such as `create_policy`, `update_policy`, or `delete_policy`.
+</Warning>
+
+### Using the visual builder
+
+The visual builder is the simplest way to create a policy. It generates Cedar language based on the selections you make. Open **Policies** in the dashboard and click **New policy**, then:
+
+1. Choose the principals to which the policy applies. A policy can apply to one specific user, a selected set of users, or all users.
+2. Choose a resource type and one or more actions. The builder offers convenient presets for Read only, Contributor, and Full access.
+3. Select whether the policy allows or denies those actions. Note that a matching deny overrides access granted by any other policy.
+4. Choose one resource or all resources of that type.
+5. Validate to create the policy.
+
+### Writing Cedar directly
+
+When you need more control than the visual builder provides, open **Policies** in the dashboard and click **New policy**, then select the **Cedar** editor. The editor is useful for:
+
+- Granting access through group membership
+- Writing additional `when` or `unless` conditions
+- Combining several principal or resource conditions
+- Reviewing or editing the exact policy source
+
+For example, the following policy gives members of the sales group read access to one volume:
+
+```text
+permit (
+    principal in Group::"groups/sales",
+    action == Action::"volume_read",
+    resource == Volume::"volumes/fedcba98-7654-3210-fedc-ba9876543210"
+);
+```
+
+### Creating policies through the API
+
+Policies can also be created, updated, listed, and deleted through the Policy API. An API-created policy contains the same fields as a dashboard policy (`displayName` and `description` are optional).
+
+OuterProduct’s API uses Connect over HTTP. Raw HTTP requests must include `Connect-Protocol-Version: 1`.
+
+```shellscript
+curl "$OUTERPRODUCT_API_URL/outerproduct.policy.v1alpha.PolicyService/CreatePolicy" \
+  --header "Authorization: Bearer $OUTERPRODUCT_TOKEN" \
+  --header "Connect-Protocol-Version: 1" \
+  --json '{
+    "policy": {
+      "displayName": "Analytics readers",
+      "description": "Allows the analytics group to read the reporting volume.",
+      "statement": "permit (principal in Group::\"groups/analytics\", action == Action::\"volume_read\", resource == Volume::\"volumes/VOLUME_ID\");"
+    }
+  }'
+```
+
+The response includes a server-assigned policy identifier and an ETag used to protect updates from concurrent changes.
+
+## Available actions
+
+The current policy model includes the following major resource-specific actions.
+
+<table>
+  <colgroup>
+    <col width="100" />
+    <col width="616" />
+  </colgroup>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Account</td>
+      <td>Account administration and creation or listing of top-level resources</td>
+    </tr>
+    <tr>
+      <td>User</td>
+      <td>`get_user`, `update_user`, `disable_user`, and API-key actions</td>
+    </tr>
+    <tr>
+      <td>Group</td>
+      <td>`get_group`, `update_group`, `delete_group`</td>
+    </tr>
+    <tr>
+      <td>Policy</td>
+      <td>`get_policy`, `list_policies`, `create_policy`, `update_policy`, `delete_policy`</td>
+    </tr>
+    <tr>
+      <td>Volume</td>
+      <td>`volume_read`, `volume_write`, `volume_manage`</td>
+    </tr>
+    <tr>
+      <td>Secret</td>
+      <td>`secret_read`, `secret_manage`, `secret_use`</td>
+    </tr>
+    <tr>
+      <td>File tree</td>
+      <td>`read_file_tree`, `use_file_tree`, `delete_file_tree`</td>
+    </tr>
+    <tr>
+      <td>Run</td>
+      <td>`read_run`, `execute_run`, `cancel_run`, `delete_run`</td>
+    </tr>
+  </tbody>
+</table>
+
+## Built-in access
+
+OuterProduct includes built-in policies for common ownership and self-service behavior. Among other things, these policies allow users to:
+
+- Manage their own user information and API keys
+- Create common resources such as volumes, secrets, file trees, and runs
+- Access resources they created
+
+Built-in policies are evaluated alongside policies created in the dashboard. They cannot be viewed or edited as ordinary dashboard policies.

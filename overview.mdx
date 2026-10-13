@@ -1,0 +1,89 @@
+---
+title: "Runs, Calls, and Attempts"
+---
+
+A Run is a remote execution of your code on OuterProduct. It starts with a single function call and can include additional child function calls launched by your code as it runs. Each Call combines a function and its arguments with the software dependencies, hardware, environment, and durability settings required to run it.
+
+OuterProduct tracks execution at three levels:
+
+- **Run:** The complete execution, including the initial function call and any calls it launches.
+- **Call:** One function invocation submitted through the SDK with its arguments and execution settings. Every Run starts with a root Call.
+- **Attempt:** One try at executing a Call. Retrying a Call creates another Attempt for that Call within the same Run.
+
+A Run can contain many Calls, and each Call can have multiple Attempts. The UI shows this structure alongside execution status and logs.
+
+See [Retries and durability](/retries-and-durability) for retry configuration and behavior.
+
+## Running a function
+
+To create a Run in OuterProduct, use `client.run()` to create its first Call. This Call becomes the root of the new Run. Any Calls created by the function as it executes become child Calls within the same Run. The function must take an OuterProduct `client` as its first parameter. When calling `client.run()`, specify the function, its arguments, and its compute requirements.
+
+```python
+import outerproduct_sdk as op
+
+def sum_batch(client, values):
+    return sum(values)
+
+client = op.init()
+image = op.Image.from_registry("python:3.13-slim")
+
+run = client.run(
+    fn=sum_batch,
+    args=([1, 2, 3],),
+    image=image,
+)
+
+print(run.wait())  # 6
+```
+
+OuterProduct supplies the function’s `client` argument automatically. The remaining positional arguments can be supplied through the `args` parameter, and named arguments can be supplied through `kwargs`.
+
+`client.run()` returns a handle to the Run after submission, without waiting for execution to complete. Calling `.wait()` blocks until the Run completes and returns the function’s result. 
+
+## Arguments and results
+
+When creating a Call, pass `client.run()` the function and its arguments, along with the settings that control its execution.
+
+OuterProduct mounts the source containing each function and imports the function by name. Arguments and return values are serialized using `cloudpickle` and can be any Python objects it supports.
+
+<Note>
+  Large arrays, datasets, model weights, and other large inputs or outputs are often better stored in a [Volume](/volumes) and managed through volume mounts.
+</Note>
+
+Each argument to `client.run()` controls one part of the execution:
+
+```python
+import outerproduct_sdk as op
+
+
+def my_application(_client, input_path):
+    # ...
+    return f"Processed {input_path}"
+
+
+client = op.init()
+
+run = client.run(
+    fn=my_application,
+    args=("/data/input.json",),
+    image=op.Image.from_registry("python:3.12-slim"),
+    cpu=4,
+    memory_bytes=16 * 1024**3, # 16 GiB
+    gpu_type="L4",
+    env_vars={"ENVIRONMENT": "production"},
+    volumes={"/data": data_volume},
+    retry_strategy=op.RetryStrategy(max_attempts=3),
+)
+
+result = run.wait()
+```
+
+These arguments are explored in more details in dedicated sections of the docs:
+
+- **Function (**`fn`**):** The Python function to execute. It may be synchronous or asynchronous and must accept an OuterProduct client as its first argument.
+- **Arguments (**`args `**and** `kwargs`**):** The values passed to the function after its client argument. Arguments must be serializable.
+- **Image (**`image`**):** The container environment in which the function runs. The image defines the operating system, Python runtime, and installed dependencies.
+- **Hardware (**`cpu`**,** `memory_bytes`**,** `gpu`**, and** `gpu_type`**):** The compute resources assigned to the function. You can choose the number of CPUs, available memory, GPU count, and GPU type.
+- **Environment variables (**`env_vars`**):** Configuration injected into the container. Values can be plain strings or securely stored OuterProduct secrets.
+- **Volumes (**`volumes`**):** Persistent storage mounted inside the container. Each entry maps a container path, such as `/data`, to an OuterProduct Volume.
+- **Retry strategy (**`retry_strategy`**):** Controls how OuterProduct responds when an attempt fails. For example, `max_attempts=3` allows a Call to be attempted up to three times.
