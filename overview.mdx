@@ -16,7 +16,7 @@ See [Retries and durability](/retries-and-durability) for retry configuration an
 
 ## Running a function
 
-To create a Run in OuterProduct, write a Python function that takes an OuterProduct  `client`  as its first parameter. Then, submit your function using `client.run()`, specifying the function to run, along with its arguments and compute requirements. 
+To create a Run in OuterProduct, use `client.run()` to create its first Call. This Call becomes the root of the new Run. Any Calls created by the function as it executes become child Calls within the same Run. The function must take an OuterProduct `client` as its first parameter. When calling `client.run()`, specify the function, its arguments, and its compute requirements.
 
 ```python
 import outerproduct_sdk as op
