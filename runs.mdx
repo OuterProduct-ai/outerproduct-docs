@@ -51,7 +51,7 @@ In addition to the function, arguments, and image, `client.run()` accepts variou
 
 ### Arguments and results
 
-OuterProduct serializes functions, arguments, and return values using `cloudpickle`. Arguments and results can be any Python objects that support this serialization.
+OuterProduct mounts the source containing each function and imports the function by name. Arguments and return values are serialized using `cloudpickle` and can be any Python objects it supports.
 
 <Note>
   Large arrays, datasets, model weights, and other large inputs or outputs are often better stored in a [Volume](/volumes) and managed through volume mounts.
