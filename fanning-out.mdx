@@ -8,8 +8,6 @@ A common pattern in a Run is to apply the same function independently to many in
 
 When used within a Run, as in the example below, these invocations become child Calls in that Run. When used outside a Run, each invocation creates a separate Run.
 
-It can replace repeated `client.run()` calls when each input needs the same processing.
-
 ```python
 def sum_batches(client, batches):
     results = client.map(
