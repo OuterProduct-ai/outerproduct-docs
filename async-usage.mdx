@@ -4,6 +4,8 @@ title: "Async usage"
 
 OuterProduct SDK methods are synchronous by default, which keeps scripts, notebooks, and other sequential workflows straightforward. Each method also provides an asynchronous version through its `.aio` interface.
 
+Use the async interface if your application already uses `async` and `await`. While your code waits for OuterProduct to submit or finish a Call, Python can continue handling other work—for example, serving other web requests or waiting for several Calls at the same time. 
+
 The `.aio()` interface allows SDK operations to be awaited without blocking the calling event loop.
 
 ```python
