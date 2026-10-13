@@ -2,7 +2,7 @@
 title: "Retries and durability"
 ---
 
-An OuterProduct Run forms a computation graph. Each function invocation is a **Call**. The top-level `client.run()` creates a new Run and its root Call. Inside that function, the scoped client creates child Calls within the same Run.
+An OuterProduct Run forms a computation graph. The top-level `client.run()` creates a new Run and its root Call. Inside that Call, the scoped client creates child Calls within the same Run.
 
 This hierarchy allows OuterProduct to track each Call independently. For example, in the following code, the `pipeline` call orchestrates a 2-step workflow (first, `prepare_data` , then `train_model` ). Every function receives an OuterProduct client as its first argument. A function can ignore it, as `_client` does above, or use it to create more Calls.
 
