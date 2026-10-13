@@ -2,7 +2,7 @@
 title: "Async usage"
 ---
 
-OuterProduct SDK methods are synchronous by default, which keeps scripts, notebooks, and other sequential workflows straightforward. Each method also provides an asynchronous version through its `.aio` interface.
+OuterProduct SDK methods are synchronous by default, which keeps scripts, notebooks, and other sequential workflows straightforward. Each method also provides an asynchronous version through its `.aio` interface (`client.run.aio()`, `call.wait.aio()`,  `client.map.aio()`).
 
 Use the async interface if your application already uses `async` and `await`. While your code waits for OuterProduct to submit or finish a Call, Python can continue handling other work such as serving other web requests or waiting for several Calls at the same time. 
 
@@ -25,4 +25,4 @@ asyncio.run(main())
 
 `await client.run.aio()` returns a handle after submission. `await run.wait.aio()` waits for the result.
 
-Functions executed by OuterProduct can also use `async def`. Inside an async function, `client.run.aio()`, `call.wait.aio()`, and `client.map.aio()` provide awaitable versions of the same operations. 
+Functions executed by OuterProduct can also use `async def`. Inside an async function,  provide awaitable versions of the same operations. 
