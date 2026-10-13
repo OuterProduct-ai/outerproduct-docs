@@ -96,42 +96,6 @@ Each child Call can be configured separately, with its own image, compute resour
 
 When the parent function exits, OuterProduct requests cancellation of any unfinished child Calls. In this example, the parent waits for both children before returning its result.
 
-## Mapping over inputs
-
-`client.map()` applies a function to a collection of inputs concurrently and returns an iterator that yields results in input order. Unlike `client.run()`, it returns results directly, so no additional `.wait()` is needed.
-
-It can replace repeated `client.run()` calls when each input needs the same processing.
-
-```python
-def sum_batches(client, batches):
-    results = client.map(
-        sum_batch,
-        batches,
-        image=image,
-    )
-    # results yields 6, 15, 24 for the batches below.
-    return sum(results)
-
-
-run = client.run(
-    fn=sum_batches,
-    args=([[1, 2, 3], [4, 5, 6], [7, 8, 9]],),
-    image=image,
-)
-
-print(run.wait())  # 45
-```
-
-In this example, each batch produces one Call to `sum_batch`, with the batch passed as its `values` argument. Here, the Run contains one root Call and three child Calls. The parent combines their results as it consumes the iterator.
-
-Inside a running function, `client.map()` creates child Calls in the current Run. From local code, it creates a separate Run for each input.
-
-<Note>
-  When called from inside a running function, `client.map()` creates parallel child Calls within the current Run. So, if the parent function retries, completed child results are reused. See [Retries & Durability](/retries-and-durability) for more on how retries behave within a single Run.
-
-  However, when `client.map()` is called directly from local code, each input creates a separate Run with its own retries and durability boundary. So, calling `client.map()` again from local code starts new Runs for every input, including inputs that previously completed successfully. 
-</Note>
-
 ## Async usage
 
 The `.aio()` interface allows SDK operations to be awaited without blocking the calling event loop.

@@ -43,6 +43,7 @@
           "env-vars",
           "volumes",
           "runs",
+          "fanning-out",
           "retries-and-durability"
         ]
       },
