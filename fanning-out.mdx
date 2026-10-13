@@ -30,8 +30,6 @@ print(run.wait())  # 45
 
 In this example, each batch produces one Call to `sum_batch`, with the batch passed as its `values` argument. Here, the Run contains one root Call and three child Calls. The parent combines their results as it consumes the iterator.
 
-Inside a running function, `client.map()` creates child Calls in the current Run. From local code, it creates a separate Run for each input.
-
 <Note>
   When called from inside a running function, `client.map()` creates parallel child Calls within the current Run. So, if the parent function retries, completed child results are reused. See [Retries & Durability](/retries-and-durability) for more on how retries behave within a single Run.
 
